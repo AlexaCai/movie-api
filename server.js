@@ -25,6 +25,7 @@ http.createServer((request, response) => {
     } else {
         filePath = 'index.html';
     }
+    
     fs.readFile(filePath, (err, data) => {
         if (err) {
             throw err;
