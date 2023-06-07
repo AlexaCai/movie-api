@@ -77,10 +77,16 @@ app.get('/', (req, res) => {
 // ***With this function in place, if someone requests the 'documentation.html file, Express would automatically route that request to send back a response with the 'public/documentation.html' file.
 app.use(express.static('public'));
 
+// ***This code would execute every time an error occurs in the code. Information about the current error would be logged to the terminal using err.stack, which is a property of the error parameter for the middleware function. 
+// ***Error-handling middleware should always be defined last in a chain of middleware, after all other instances of app.use() and route calls (after app.get(), app.post(), etc.) but before app.listen().
+// ***The first of parameters ('err') allows to receive information about whatever unexpected error brought to the current handler.
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send('Something broke!');
+  });
+
 // ***app.listen(8080, () => { is used to set up the server to listen to for requests on port 8080.
 // ***Every time an HTTP request hits the server, Node will deal with the request, using the request argument as the request sent to the server and the response argument as the response the server returns. But in order to do this, Node needs to be listening for a request, which is exactly what the listen method on the server object is doing. In most cases, all is needed is to pass to 'listen' is the port number you want the server to listen on (which, in this case, is 8080).
 app.listen(8080, () => {
     console.log('Your app is listening on port 8080.');
 });
-
-
