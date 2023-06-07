@@ -2,25 +2,13 @@
 const express = require('express');
 // ***Used to import Morgan (preexisting library as a logging middleware, equipped to log any and all useful information about a request)
 const morgan = require('morgan');
-// ***Used to import built-in module fs 
-const fs = require('fs');
-// ***Used to import built-in module path
-const path = require('path');
 
 // ***Used to declare a variable that encapsulates Express’s functionality to configure the web server. This new variable is what will be use to route HTTP requests and responses.
 const app = express();
 
 // ***The 'common' parameter specifies that requests should be logged using Morgan’s 'common' format, which logs basic data such as IP address, the time of the request, the request method and path, as well as the status code that was sent back as a response.
 // ***When running code with app.use(morgan('common')); this code will returns parts of the “common” format console logging into the terminal (such as date and time of request, the method such as GET, URL path, response code and number of characters of the response that was sent back).
-// app.use(morgan('common'));
-
-// ***Used to create a write stream (to create a new ‘log.txt’ file is created in root directory - so the 'movie_api' folder).
-const accessLogStream = fs.createWriteStream(path.join(__dirname, 'log.txt'), {flags: 'a'})
-
-// ***app.use() function is used to invoke middleware function (see relation with the const app = express(); upper).
-// ***app.use(morgan('combined', {stream: accessLogStream})); is used to setup the logger.
-// ***Any requests will now be logged into the log.txt document inside the __dirname (movie_api folder)
-app.use(morgan('combined', {stream: accessLogStream}));
+app.use(morgan('common'));
 
 // ***Top movies list
 let topMovies = [
