@@ -55,10 +55,6 @@ let topMovies = [
     {
         title: 'Princess Mononoke',
         director: 'Hayao Miyazaki'
-    },
-    {
-        title: 'Twilight',
-        author: 'Stephanie Meyer'
     }
 ];
 
