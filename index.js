@@ -224,23 +224,82 @@ app.get('/movies/:title', (req, res) => {
 // ***REQUEST: Return data about a genre (description) by name (e.g., “Thriller”).
 // ***READ : The request is equal to the 'READ' in the CRUD functions for systems that store data. Therefore, Express GET route located at the endpoint '/movies/genres/genreName' and returns a JSON object containing data about the genre requested, allowing the user to GET/READ the info.
 app.get('/movies/genre/:genreName', (req, res) => {
-    // ***Creation of a new variable that is equal to req.params.title, which in turn is equal to whatever value/title the user passes through the URL and use that accordingly. So in that case 'const title' will equal whatever title the user is looking for and has been placed in the URL. Note that 'const title = req.params.title;' is not used because 'const { title } = req.params;' used below does the exact same thing - it's just written differently.
-    // const title = req.params.title;
-
-    // ***Creation of a new variable title and that title variable is equal to the property of the same name on the object that is on the right side of the equal sign.
+    
+    // ***Creation of a new variable genreName, and that genreName variable is equal to the property of the same name on the object that is on the right side of the equal sign.
     const { genreName } = req.params;
-    // ***When 'movie.Title === title' ('movie.Title' being a movie title from the array list inside the 'movies' variable upper, and 'title' being the title searched by the user), send the current value of 'movie =>' out to the 'const movie' variable.
+    // ***movies.find(movie => movie.Genre.Name === genreName).Genre; returns the value for the 'Genre' searched and present inside the array list in the movies variable upper. The '.Genre' at the end is important because that's what make it possible to returns the specific propertie of a searched 'Genre' from the array list movies. Otherwise, this method would returns the value of the entire object of a movie containing the searched genre.
     const genre = movies.find(movie => movie.Genre.Name === genreName).Genre;
 
     // ***Different responses (status and return messages) depending on the output of the request processing.
     if (genre) {
         res.status(200).json(genre);
     } else {
-        res.status(400).send('no such genre')
+        res.status(400).send('No such genre')
     }
 });
 
 
+// ***REQUEST: Return data about a director (bio, birth year, death year) by name.
+// ***READ : The request is equal to the 'READ' in the CRUD functions for systems that store data. Therefore, Express GET route located at the endpoint '/movies/directors/:directorName' and returns a JSON object containing data about the director requested, allowing the user to GET/READ the info.
+app.get('/movies/directors/:directorName', (req, res) => {
+    
+    // ***Creation of a new variable directorName, and that directorName variable is equal to the property of the same name on the object that is on the right side of the equal sign.
+    const { directorName } = req.params;
+    // ***movies.find(movie => movie.Director.Name === directorName).Director; returns the value for the 'Director' searched and present inside the array list in the movies variable upper. The '.Director' at the end is important because that's what make it possible to returns the specific propertie of a searched 'Director' from the array list movies. Otherwise, this method would returns the value of the entire object of a movie containing the searched director.
+    const director = movies.find(movie => movie.Director.Name === directorName).Director;
+
+    // ***Different responses (status and return messages) depending on the output of the request processing.
+    if (director) {
+        res.status(200).json(director);
+    } else {
+        res.status(400).send('No such director')
+    }
+});
+
+
+// ***REQUEST: Allow new users to register.
+// ***POST : The request is equal to the 'CREATE' in the CRUD functions for systems that store data. Therefore, Express POST the route located at the endpoint '/users' and returns a JSON object containing data about the account created.
+app.post('/users', (req, res) => {
+    // ***Creation of a new variable newUser, and that newUser variable is equal to the request body data format (a JSON object holding data about the account to create) sent by the user who wishes to create an account.
+    // *** The req.body is only doable here because of the app.use(bodyParser.json()); line of code at the very top of this file (this body parser package installed and applied via a middleware is what enables to read data from the body object - without this code, not possible to read the body object).
+    const newUser = req.body;
+    // ***Different responses (status and return messages) depending on the output of the request processing.
+    if (newUser.name) {
+        // ***uuid.v4(); is possible to use it because of the package imported at the beginning of the file (const uuid = require('uuid');).
+        newUser.id = uuid.v4();
+        // ***Used to add a new user inside the array of the variable 'users' upper every time a new user create an account.
+        users.push(newUser)
+        // ***Status code 201 because it means 'created'.
+        res.status(201).json(newUser);
+    } else {
+        // ***Status 400 code because it means 'bad request'.
+        res.status(400).send('users need names')
+    }
+});
+
+
+// ***REQUEST: Allow users to update their user info (username).
+// ***PUT : The request is equal to the 'UPDATE' in the CRUD functions for systems that store data. Therefore, Express UPDATE the information of a user located at the endpoint '/users/:id' and returns a JSON object containing data about the director requested, allowing the user to GET/READ the info.
+app.put('/users/:id', (req, res) => {
+    // ***Creation of a new variable id and that id variable is equal to the property of the same name on the object that is on the right side of the equal sign.
+    const { id } = req.params;
+    // ***Creation of a new variable updatedUser, and that updatedUser variable is equal to the property of the same name on the object that is on the right side of the equal sign.
+    // *** The req.body is only doable here because of the app.use(bodyParser.json()); line of code at the very top of this file (this body parser package installed and applied via a middleware is what enables to read data from the body object - without this code, not possible to read the body object).
+    const updatedUser = req.body;
+
+    // ***Different responses (status and return messages) depending on the output of the request processing.
+    if (newUser.name) {
+        // ***uuid.v4(); is possible to use it because of the package imported at the beginning of the file (const uuid = require('uuid');).
+        newUser.id = uuid.v4();
+        // ***Used to add a new user inside the array of the variable 'users' upper every time a new user create an account.
+        users.push(newUser)
+        // ***Status code 201 because it means 'created'.
+        res.status(201).json(newUser);
+    } else {
+        // ***Status 400 code because it means 'bad request'.
+        res.status(400).send('users need names')
+    }
+});
 
 
 // ***Express GET route located at the endpoint '/' and that returns a string default message.
