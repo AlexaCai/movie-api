@@ -368,8 +368,7 @@ app.delete('/users/:id', (req, res) => {
         // ***Note about the two == here : The 'user.id' in 'user.id == id' is a NUMBER (as seen in the 'users' variable array upper on the 'id' propertie), and the 'id' in the 'user.id == id' is a STRING pulled from the URL string '/users/:id' inserted by the user. Thats why in 'user.id == id', there are only two == used. Because if tree === are used (strict equality), the 'user.id' wouldnt be equal to 'id', but by using two ==, they will be equal (they will be true/satisfied condition, even if one is a NUMBER and the other is a STRING).
         users = users.filter(user => user.id != id);
         // ***Status 200 code because it means 'good request'.
-        res.json(users)
-        // res.status(200).send('User' + id + ' has been deleted.');
+        res.status(200).send('User ' + id + ' has been deleted.');
     } else {
         // ***Status 400 code because it means 'bad request'.
         res.status(400).send('Could not execute the request')
