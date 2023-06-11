@@ -71,38 +71,73 @@
                 <td>Request</td>
                 <td>URL</td>
                 <td>HTTP Method</td>
-                <td>Request body <br> 
-                    data format
-                    </td>
-                <td>Response body<br> 
-                    data format</td>
+                <td>Request body data format</td>
+                <td>Response body data format</td>
             </tr>
         </thead>
         <tbody>
             <tr>
-                <td>HTML</td>
-                <td>1</td>
-                <td>Beginner</td>
+                <td>Return a list of ALL movies to the user</td>
+                <td>/movies</td>
+                <td>GET</td>
+                <td>None</td>
+                <td>JSON object holding data about all the movies</td>
             </tr>
             <tr>
-                <td>CSS</td>
-                <td>1</td>
-                <td>Beginner</td>
+                <td>Return data (title, description, genre, director, image URL) about a single movie by title to the user</td>
+                <td>GET</td>
+                <td>/movies/:title</td>
+                <td>None</td>
+                <td>JSON object holding data about the movie requested</td>
             </tr>
             <tr>
-                <td>Javascript</td>
-                <td>1</td>
-                <td>Beginner</td>
+                <td>Return data about a genre (description) by name (e.g., “Thriller”)</td>
+                <td>/movies/genre/:genreName</td>
+                <td>GET</td>
+                <td>None</td>
+                <td>JSON object holding data about the genre requested</td>
             </tr>
             <tr>
-                <td>ArcGIS</td>
-                <td>3</td>
-                <td>Intermediate</td>
+                <td>Return data about a director (bio, birth year, death year) by name</td>
+                <td>/movies/directors/:directorName</td>
+                <td>GET</td>
+                <td>None</td>
+                <td>JSON object holding data about the director requested</td>
             </tr>
             <tr>
-                <td>Excel</td>
-                <td>10+</td>
-                <td>Advanced</td>
+                <td>Allow new users to register</td>
+                <td>/users</td>
+                <td>POST</td>
+                <td>JSON object holdind data about the user who wants to create an account</td>
+                <td>JSON object holding data about the user's new account just created</td>
+            </tr>
+            <tr>
+                <td>Allow users to update their user info (username)</td>
+                <td>/users/:id</td>
+                <td>PUT</td>
+                <td>JSON object holding data the user wants to update</td>
+                <td>JSON object holding data about the user's updated account</td>
+            </tr>
+            <tr>
+                <td>Allow users to add a movie to their list of favorites</td>
+                <td>/users/:id/:movieTitle</td>
+                <td>POST</td>
+                <td>None</td>
+                <td>Confirmation message that the movie has been added to the favorite list</td>
+            </tr>
+            <tr>
+                <td>Allow users to remove a movie from their list of favorites</td>
+                <td>/users/:id/:movieTitle</td>
+                <td>DELETE</td>
+                <td>None</td>
+                <td>Confirmation message that the movie has been removed from the favorite list</td>
+            </tr>
+            <tr>
+                <td>Allow existing users to deregister</td>
+                <td>/users/:id</td>
+                <td>DELETE</td>
+                <td>None</td>
+                <td>Confirmation message that account has been deleted</td>
             </tr>
         </tbody>
     </table>
