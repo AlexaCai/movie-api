@@ -1,0 +1,47 @@
+#text {
+    background-color: #ffffff;
+    font-family: 'Lato', sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 1.35;
+    text-align: center;
+    margin: 30px;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+ul {
+    text-align: center;
+    list-style-position: inside;
+}
+
+table {
+    /* ----------------------About me page*/
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 20px;
+    width: 80%;
+    text-align: center;
+    table-layout: fixed;
+    z-index: 2;
+}
+
+thead tr td {
+    /* ----------------------About me page*/
+    padding: 10px 10px 10px 10px;
+    background-color: #000000;
+    color: #ffffff;
+    width: 25%;
+}
+
+tbody tr td {
+    /* ----------------------About me page*/
+    padding: 10px 10px 10px 10px;
+    word-wrap: break-word;
+    background-color: #f3f3f3;
+    width: 25%;
+}
