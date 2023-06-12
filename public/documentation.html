@@ -5,66 +5,74 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css"
+        href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
+    <link rel="stylesheet" type="text/css" href="file:///C:/Users/alexa/Documents/movie_api/css/styles.css">
     <title>Documentation</title>
 </head>
 
 <body>
-    <h1>Movie API</h1>
-    <h3>Description</h3>
-    <p>This API is the server-side component of a movies web application. This web
-        application provide users with access to information about different
-        movies, directors, and genres by interacting with a database that stores data
-        about different movies.
-    </p>
-    <p>
-        The application is hosted online. The web application itself is responsive an can therefore be
-        used anywhere and on any device, giving all users the same experience.
-    </p>
-    <p>
-        Whenever users of the web application are interacting with the application, the server-side of the
-        application is used, processing their requests and performing operations against the
-        data in the database. The users are able to use the the web application whenever they like
-        to read information about different movies or update their user information, for instance, their
-        list of favorite movies.
-    </p>
-    <p>
-        More specifically, the web application:
-    <ul>
-        <li>Returns a list of ALL movies to the user.</li>
-        <li>Returns a list of ALL movies to the user.</li>
-        <li>Returns data (description, genre, director, image URL, whether it’s featured or not) about a single movie by
-            title to the user.</li>
-        <li>Returns data about a genre (description) by name/title (e.g., “Thriller”).</li>
-        <li>Returns data about a director (bio, birth year, death year) by name.</li>
-        <li>Allows new users to register.</li>
-        <li>Allows users to update their user info (username, password, email, date of birth).</li>
-        <li>Allows users to add a movie to their list of favorites.</li>
-        <li>Allows users to remove a movie from their list of favorites.</li>
-        <li>Allows existing users to deregister.</li>
-    </ul>
-    </p>
-    <h3>Technical aspects</h3>
-    <p>The complete tech stack used for this movie web application is the MERN
-        (MongoDB, Express, React, and Node.js) stack.
-    </p>
-    More specifically:
-    <ul>
-        <li>The API is a Node.js and Express application.</li>
-        <li>The API uses REST architecture, with URL endpoints corresponding to the data
-            operations listed above</li>
-        <li>The API uses at three middleware modules, such as the body-parser package for
-            reading data from requests and morgan for logging.</li>
-        <li>The API uses a “package.json” file.</li>
-        <li>The database is built using MongoDB.</li>
-        <li>The business logic is modeled with Mongoose.</li>
-        <li>The API provides movie information in JSON format.</li>
-        <li>The API includes user authentication and authorization code.</li>
-        <li>The API includes data validation logic.</li>
-        <li>The API meets data security regulations.</li>
-        <li>The API source code is deployed to a publicly accessible on GitHub.</li>
-        <li>The API is deployed to Heroku.</li>
-    </ul>
-    <h3>List of URL endpoints and request methods</h3>
+    <div id="text">
+        <h1>Movie API</h1>
+        <h3>Description</h3>
+        <p>This API is the server-side component of a movies web application. This web
+            application provide users with access to information about different
+            movies, directors, and genres by interacting with a database that stores data
+            about different movies.
+        </p>
+        <p>
+            The application is hosted online. The web application itself is responsive an can therefore be
+            used anywhere and on any device, giving all users the same experience.
+        </p>
+        <p>
+            Whenever users of the web application are interacting with the application, the server-side of the
+            application is used, processing their requests and performing operations against the
+            data in the database. The users are able to use the the web application whenever they like
+            to read information about different movies or update their user information, for instance, their
+            list of favorite movies.
+        </p>
+        <p class="bold">
+            More specifically, the web application:
+        </p>
+        <ul>
+            <li>Returns a list of ALL movies to the user.</li>
+            <li>Returns a list of ALL movies to the user.</li>
+            <li>Returns data (description, genre, director, image URL, whether it’s featured or not) about a single
+                movie by
+                title to the user.</li>
+            <li>Returns data about a genre (description) by name/title (e.g., “Thriller”).</li>
+            <li>Returns data about a director (bio, birth year, death year) by name.</li>
+            <li>Allows new users to register.</li>
+            <li>Allows users to update their user info (username, password, email, date of birth).</li>
+            <li>Allows users to add a movie to their list of favorites.</li>
+            <li>Allows users to remove a movie from their list of favorites.</li>
+            <li>Allows existing users to deregister.</li>
+        </ul>
+        <h3>Technical aspects</h3>
+        <p>The complete tech stack used for this movie web application is the MERN
+            (MongoDB, Express, React, and Node.js) stack.
+        </p>
+        <p class="bold">
+        More specifically:
+        </p>
+        <ul>
+            <li>The API is a Node.js and Express application.</li>
+            <li>The API uses REST architecture, with URL endpoints corresponding to the data
+                operations listed above</li>
+            <li>The API uses at three middleware modules, such as the body-parser package for
+                reading data from requests and morgan for logging.</li>
+            <li>The API uses a “package.json” file.</li>
+            <li>The database is built using MongoDB.</li>
+            <li>The business logic is modeled with Mongoose.</li>
+            <li>The API provides movie information in JSON format.</li>
+            <li>The API includes user authentication and authorization code.</li>
+            <li>The API includes data validation logic.</li>
+            <li>The API meets data security regulations.</li>
+            <li>The API source code is deployed to a publicly accessible on GitHub.</li>
+            <li>The API is deployed to Heroku.</li>
+        </ul>
+        <h3>List of URL endpoints and request methods</h3>
+    </div>
     <table>
         <thead>
             <tr>
@@ -72,7 +80,9 @@
                 <td>URL</td>
                 <td>HTTP Method</td>
                 <td>Request body data format</td>
+                <td>Request example</td>
                 <td>Response body data format</td>
+                <td>Response example</td>
             </tr>
         </thead>
         <tbody>
@@ -81,63 +91,82 @@
                 <td>/movies</td>
                 <td>GET</td>
                 <td>None</td>
+                <td></td>
                 <td>JSON object holding data about all the movies</td>
+                <td></td>
             </tr>
             <tr>
-                <td>Return data (title, description, genre, director, image URL) about a single movie by title to the user</td>
-                <td>GET</td>
+                <td>Return data (title, description, genre, director, image URL) about a single movie by title to the
+                    user</td>
                 <td>/movies/:title</td>
+                <td>GET</td>
                 <td>None</td>
+                <td></td>
                 <td>JSON object holding data about the movie requested</td>
+                <td></td>
             </tr>
             <tr>
                 <td>Return data about a genre (description) by name (e.g., “Thriller”)</td>
                 <td>/movies/genre/:genreName</td>
                 <td>GET</td>
                 <td>None</td>
+                <td></td>
                 <td>JSON object holding data about the genre requested</td>
+                <td></td>
             </tr>
             <tr>
                 <td>Return data about a director (bio, birth year, death year) by name</td>
                 <td>/movies/directors/:directorName</td>
                 <td>GET</td>
                 <td>None</td>
+                <td></td>
                 <td>JSON object holding data about the director requested</td>
+                <td></td>
             </tr>
             <tr>
                 <td>Allow new users to register</td>
                 <td>/users</td>
                 <td>POST</td>
                 <td>JSON object holdind data about the user who wants to create an account</td>
+                <td></td>
                 <td>JSON object holding data about the user's new account just created</td>
+                <td></td>
             </tr>
             <tr>
                 <td>Allow users to update their user info (username)</td>
                 <td>/users/:id</td>
                 <td>PUT</td>
                 <td>JSON object holding data the user wants to update</td>
+                <td></td>
                 <td>JSON object holding data about the user's updated account</td>
+                <td></td>
             </tr>
             <tr>
                 <td>Allow users to add a movie to their list of favorites</td>
                 <td>/users/:id/:movieTitle</td>
                 <td>POST</td>
                 <td>None</td>
+                <td></td>
                 <td>Confirmation message that the movie has been added to the favorite list</td>
+                <td></td>
             </tr>
             <tr>
                 <td>Allow users to remove a movie from their list of favorites</td>
                 <td>/users/:id/:movieTitle</td>
                 <td>DELETE</td>
                 <td>None</td>
+                <td></td>
                 <td>Confirmation message that the movie has been removed from the favorite list</td>
+                <td></td>
             </tr>
             <tr>
                 <td>Allow existing users to deregister</td>
                 <td>/users/:id</td>
                 <td>DELETE</td>
                 <td>None</td>
+                <td></td>
                 <td>Confirmation message that account has been deleted</td>
+                <td></td>
             </tr>
         </tbody>
     </table>
