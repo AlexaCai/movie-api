@@ -45,3 +45,41 @@ tbody tr td {
     background-color: #f3f3f3;
     width: 25%;
 }
+
+td:nth-child(1) {
+    width: 125px;
+}
+
+/* the second */
+td:nth-child(2) {
+    width: 100px;
+}
+
+/* the third */
+td:nth-child(3) {
+    width: 80px;
+}
+
+td:nth-child(4) {
+    width: 70px;
+}
+
+td:nth-child(5) {
+    width: 150px;
+}
+
+td:nth-child(6) {
+    width: 200px;
+}
+
+td:nth-child(7) {
+    width: 150px;
+}
+
+td:nth-child(8) {
+    width: 200px;
+}
+
+.wide-column {
+    text-align: left;
+}
