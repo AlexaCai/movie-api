@@ -207,7 +207,7 @@ app.get('/movies/:title', (req, res) => {
 });
 
 
-// ***REQUEST: Return data about a genre (description) by name (e.g., “Thriller”).
+// ***REQUEST: Return data about a genre by name (e.g., “Thriller”).
 // ***READ : The request is equal to the 'READ' in the CRUD functions for systems that store data. Therefore, Express GET route located at the endpoint '/movies/genres/genreName' and returns a JSON object containing data about the genre requested, allowing the user to GET/READ the info.
 app.get('/movies/genre/:genreName', (req, res) => {
 
@@ -225,7 +225,7 @@ app.get('/movies/genre/:genreName', (req, res) => {
 });
 
 
-// ***REQUEST: Return data about a director (bio, birth year, death year) by name.
+// ***REQUEST: Return data about a director (bio and birth year) by name.
 // ***READ : The request is equal to the 'READ' in the CRUD functions for systems that store data. Therefore, Express GET route located at the endpoint '/movies/directors/:directorName' and returns a JSON object containing data about the director requested, allowing the user to GET/READ the info.
 app.get('/movies/directors/:directorName', (req, res) => {
 
@@ -264,7 +264,7 @@ app.post('/users', (req, res) => {
 });
 
 
-// ***REQUEST: Allow users to update their user info (username).
+// ***REQUEST: Allow users to update their user info (name).
 // ***PUT : The request is equal to the 'UPDATE' in the CRUD functions for systems that store data. Therefore, Express UPDATE the information of a user located at the endpoint '/users/:id' and returns a JSON object containing data about the user (updated version).
 app.put('/users/:id', (req, res) => {
     // ***Creation of a new variable id and that id variable is equal to the property of the same name on the object that is on the right side of the equal sign.
@@ -288,7 +288,7 @@ app.put('/users/:id', (req, res) => {
 });
 
 
-// ***REQUEST: Allow users to add a movie to their list of favorites (showing only a text that a movie has been added—more on this later).
+// ***REQUEST: Allow users to add a movie to their list of favorites.
 // ***POST : The request is equal to the 'CREATE' in the CRUD functions for systems that store data (but could also have been an UPDATE). Therefore, Express POST the data sent by the user at the endpoint '/users/:id/:movieTitle' and returns a confirmation message.
 app.post('/users/:id/:movieTitle', (req, res) => {
     // ***Creation of a new variable id, movieTitle and that id, movieTitle variable is equal to the property of the same name on the object that is on the right side of the equal sign.
@@ -303,7 +303,7 @@ app.post('/users/:id/:movieTitle', (req, res) => {
         // ***Used to add a new favorite movie selected by a user inside the array 'favoriteMovies' of his/her name in the variable 'users' upper.
         user.favoriteMovies.push(movieTitle)
         // ***Status 200 code because it means 'good request'.
-        res.status(200).send(movieTitle + ' has been added to user ' + id + '\'s array.');
+        res.status(200).send(movieTitle + ' has been added to user ' + id + '\'s list of favorite movies.');
     } else {
         // ***Status 400 code because it means 'bad request'.
         res.status(400).send('Could not execute the request')
@@ -311,7 +311,7 @@ app.post('/users/:id/:movieTitle', (req, res) => {
 });
 
 
-// ***REQUEST: Allow users to remove a movie from their list of favorites (showing only a text that a movie has been removed—more on this later).
+// ***REQUEST: Allow users to remove a movie from their list of favorites.
 // ***DELETE : The request is equal to the 'DELETE' in the CRUD functions for systems that store data. Therefore, Express DELETE the data sent by the user at the endpoint '/users/:id/:movieTitle' and returns a JSON object containing data about the account created.
 app.delete('/users/:id/:movieTitle', (req, res) => {
     // ***Creation of a new variable id, movieTitle and that id, movieTitle variable is equal to the property of the same name on the object that is on the right side of the equal sign.
@@ -329,7 +329,7 @@ app.delete('/users/:id/:movieTitle', (req, res) => {
         // ***Tree === are used (strict equality) in 'title !== movieTitle' because both values (for 'title' and 'movieTitle') are two strings. When comparing strings to strings, possible to use strict equality.
         user.favoriteMovies = user.favoriteMovies.filter(title => title !== movieTitle)
         // ***Status 200 code because it means 'good request'.
-        res.status(200).send(movieTitle + ' has been removed from user ' + id + '\'s array.');
+        res.status(200).send(movieTitle + ' has been removed from user ' + id + '\'s list of favorite movies.');
     } else {
         // ***Status 400 code because it means 'bad request'.
         res.status(400).send('Could not execute the request')
@@ -337,7 +337,7 @@ app.delete('/users/:id/:movieTitle', (req, res) => {
 });
 
 
-// ***REQUEST: Allow existing users to deregister (showing only a text that a user email has been removed—more on this later).
+// ***REQUEST: Allow existing users to deregister.
 // ***DELETE : The request is equal to the 'DELETE' in the CRUD functions for systems that store data. Therefore, Express DELETE the data sent by the user at the endpoint '/users/:id' and returns a JSON object containing data about the account created.
 app.delete('/users/:id', (req, res) => {
     // ***Creation of a new variable id, and that id variable is equal to the property of the same name on the object that is on the right side of the equal sign.
