@@ -53,7 +53,7 @@
             (MongoDB, Express, React, and Node.js) stack.
         </p>
         <p class="bold">
-        More specifically:
+            More specifically:
         </p>
         <ul>
             <li>The API is a Node.js and Express application.</li>
@@ -78,95 +78,182 @@
             <tr>
                 <td>Request</td>
                 <td>URL</td>
-                <td>HTTP Method</td>
+                <td>Query parameter</td>
+                <td>HTTP method</td>
                 <td>Request body data format</td>
-                <td>Request example</td>
+                <td>Request body data format example</td>
                 <td>Response body data format</td>
-                <td>Response example</td>
+                <td>Response body data format example</td>
             </tr>
         </thead>
         <tbody>
             <tr>
-                <td>Return a list of ALL movies to the user</td>
+                <td>Return a list of all movies to the user</td>
                 <td>/movies</td>
-                <td>GET</td>
                 <td>None</td>
-                <td></td>
+                <td>GET</td>
+                <td>Not applicable</td>
+                <td>Not applicable</td>
                 <td>JSON object holding data about all the movies</td>
-                <td></td>
+                <td class="wide-column">
+                    {<br>
+                    Title: Jurassic Park <br>
+                    Description: American movie... <br>
+                    Genre: { <br>
+                    Name: Science fiction <br>
+                    Description: Genre that uses... <br>
+                    } <br>
+                    Director: { <br>
+                    Name: Steven Spielberg <br>
+                    Bio: American filmmaker... <br>
+                    Birth: December 18, 1946 <br>
+                    } <br>
+                    ImageURL: https://www.imdb... <br>
+                    }
+                    <br>
+                    <br>
+                    { <br>
+                    Title: Gladiator <br>
+                    Description: Historical drama... <br>
+                    ... <br>
+                    }
+                </td>
             </tr>
             <tr>
                 <td>Return data (title, description, genre, director, image URL) about a single movie by title to the
                     user</td>
                 <td>/movies/:title</td>
+                <td>:title</td>
                 <td>GET</td>
-                <td>None</td>
-                <td></td>
+                <td>Not applicable</td>
+                <td>Not applicable</td>
                 <td>JSON object holding data about the movie requested</td>
-                <td></td>
+                <td class="wide-column">
+                    {<br>
+                    Title: Jurassic Park <br>
+                    Description: American movie... <br>
+                    Genre: { <br>
+                    Name: Science fiction <br>
+                    Description: Genre that uses... <br>
+                    } <br>
+                    Director: { <br>
+                    Name: Steven Spielberg <br>
+                    Bio: American filmmaker... <br>
+                    Birth: December 18, 1946 <br>
+                    } <br>
+                    ImageURL: https://www.imdb... <br>
+                    }
+                </td>
             </tr>
             <tr>
-                <td>Return data about a genre (description) by name (e.g., “Thriller”)</td>
+                <td>Return data about a genre by name (e.g.: Thriller)</td>
                 <td>/movies/genre/:genreName</td>
+                <td>:genreName</td>
                 <td>GET</td>
-                <td>None</td>
-                <td></td>
+                <td>Not applicable</td>
+                <td>Not applicable</td>
                 <td>JSON object holding data about the genre requested</td>
-                <td></td>
+                <td class="wide-column">
+                    Genre: { <br>
+                        Name: Science fiction <br>
+                        Description: Genre that uses... <br>
+                        }
+                </td>
             </tr>
             <tr>
-                <td>Return data about a director (bio, birth year, death year) by name</td>
+                <td>Return data about a director by name</td>
                 <td>/movies/directors/:directorName</td>
+                <td>:directorName</td>
                 <td>GET</td>
-                <td>None</td>
-                <td></td>
+                <td>Not applicable</td>
+                <td>Not applicable</td>
                 <td>JSON object holding data about the director requested</td>
-                <td></td>
+                <td class="wide-column">
+                    Director: { <br>
+                        Name: Chris Columbus <br>
+                        Bio: Chris Columbus is an... <br>
+                        Birth: September 10, 1958 <br>
+                    }
+                </td>
             </tr>
             <tr>
                 <td>Allow new users to register</td>
                 <td>/users</td>
+                <td>None</td>
                 <td>POST</td>
-                <td>JSON object holdind data about the user who wants to create an account</td>
-                <td></td>
+                <td>JSON object holding data about the user who wants to create an account</td>
+                <td>
+                    { <br>
+                        "name": "Eva Carlson" <br>
+                        "favoriteMovies": [ ] <br>
+                    }
+                </td>
                 <td>JSON object holding data about the user's new account just created</td>
-                <td></td>
+                <td class="wide-column">
+                    { <br>
+                        name: Eva Carlson <br>
+                        favoriteMovies: [ ] <br>
+                        id: df31675c-dc02-46cd-be70-fb000f551b9f <br>
+                    }
+                </td>
             </tr>
             <tr>
-                <td>Allow users to update their user info (username)</td>
+                <td>Allow users to update their user info (name)</td>
                 <td>/users/:id</td>
+                <td>:id</td>
                 <td>PUT</td>
                 <td>JSON object holding data the user wants to update</td>
-                <td></td>
+                <td>
+                    { <br>
+                        "name: "Eva Carlson-Taylor" <br>
+                        "favoriteMovies": [ ] <br>
+                        "id": "df31675c-dc02-46cd-be70-fb000f551b9f" <br>
+                    }
+                </td>
                 <td>JSON object holding data about the user's updated account</td>
-                <td></td>
+                <td class="wide-column">
+                    { <br>
+                        name: Eva Carlson-Taylor <br>
+                        favoriteMovies: [ ] <br>
+                        id: df31675c-dc02-46cd-be70-fb000f551b9f <br>
+                    }
+                </td>
             </tr>
             <tr>
                 <td>Allow users to add a movie to their list of favorites</td>
                 <td>/users/:id/:movieTitle</td>
+                <td>:id and :movieTitle</td>
                 <td>POST</td>
-                <td>None</td>
-                <td></td>
+                <td>Not applicable</td>
+                <td>Not applicable</td>
                 <td>Confirmation message that the movie has been added to the favorite list</td>
-                <td></td>
+                <td class="wide-column">
+                    "Blood Diamond has been added to user 1's list of favorite movies."
+                </td>
             </tr>
             <tr>
                 <td>Allow users to remove a movie from their list of favorites</td>
                 <td>/users/:id/:movieTitle</td>
+                <td>:id and :movieTitle</td>
                 <td>DELETE</td>
-                <td>None</td>
-                <td></td>
+                <td>Not applicable</td>
+                <td>Not applicable</td>
                 <td>Confirmation message that the movie has been removed from the favorite list</td>
-                <td></td>
+                <td class="wide-column">
+                    "Blood Diamond has been removed from user 1's list of favorite movies."
+                </td>
             </tr>
             <tr>
                 <td>Allow existing users to deregister</td>
                 <td>/users/:id</td>
+                <td>:id</td>
                 <td>DELETE</td>
-                <td>None</td>
-                <td></td>
+                <td>Not applicable</td>
+                <td>Not applicable</td>
                 <td>Confirmation message that account has been deleted</td>
-                <td></td>
+                <td class="wide-column">
+                    "User 1 has been deleted."
+                </td>
             </tr>
         </tbody>
     </table>
