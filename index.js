@@ -1,19 +1,32 @@
 // ***Used to import Express module.
 const express = require('express');
-// ***Used to import Body-parser module.
-const bodyParser = require('body-parser')
-// ***Used to import Uuid module.
-const uuid = require('uuid');
-// ***Used to import Morgan (preexisting library as a logging middleware, equipped to log any and all useful information about a request)
-const morgan = require('morgan');
-
-
 // ***Used to declare a variable that encapsulates Express’s functionality to configure the web server. This new variable is what will be use to route HTTP requests and responses.
 const app = express();
+
+// ***Used to import Body-parser module.
+const bodyParser = require('body-parser')
 // Used as the application of the body-parser as middleware into the app.
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+// ***Used to import Uuid module.
+const uuid = require('uuid');
+
+// ***Used to import Morgan (preexisting library as a logging middleware, equipped to log any and all useful information about a request)
+const morgan = require('morgan');
 // ***The 'common' parameter in app.use(morgan('common')); below specifies that requests should be logged using Morgan’s 'common' format, which logs basic data such as IP address, the time of the request, the request method and path, as well as the status code that was sent back as a response. When running code with app.use(morgan('common')); this code will returns parts of the “common” format console logging into the terminal (such as date and time of request, the method such as GET, URL path, response code and number of characters of the response that was sent back).
 app.use(morgan('common'));
+
+// ***These lines import the Mongoose package and the ''models.js'' file.
+const mongoose = require('mongoose');
+const Models = require('./models.js');
+
+// ***These lines require the Mongoose models defined in the ''models.js'' file, so they can be used in this project/file. ''Models.Movie'' and ''Models.User'' refer to the model names defined in the ''models.js'' file. Once the models are imported into ''index.js'' file, the API endpoints can make use of them in order to query the MongoDB database according to the schemas defined in ''models.js''.
+const Movies = Models.Movie;
+const Users = Models.User;
+
+//*** Allows Mongoose to connect to the database (see /cfDB in the path) so it can perform CRUD operations on the documents it contains from within the REST API.
+mongoose.connect('mongodb://127.0.0.1:27017/cfDB', { useNewUrlParser: true, useUnifiedTopology: true });
 
 
 // ***App users
@@ -243,26 +256,102 @@ app.get('/movies/directors/:directorName', (req, res) => {
 });
 
 
-// ***REQUEST: Allow new users to register.
+// ***REQUEST: Allow new users to register. 
 // ***POST : The request is equal to the 'CREATE' in the CRUD functions for systems that store data. Therefore, Express POST the data sent by the user at the endpoint '/users' and returns a JSON object containing data about the account created.
-app.post('/users', (req, res) => {
-    // ***Creation of a new variable newUser, and that newUser variable is equal to the request body data format (a JSON object holding data about the account to create) sent by the user who wishes to create an account.
-    // *** The req.body is only doable here because of the app.use(bodyParser.json()); line of code at the very top of this file (this body parser package installed and applied via a middleware is what enables to read data from the body object - without this code, not possible to read the body object).
-    const newUser = req.body;
-    // ***Different responses (status and return messages) depending on the output of the request processing.
-    if (newUser.name) {
-        // ***uuid.v4(); is possible to use it because of the package imported at the beginning of the file (const uuid = require('uuid');).
-        newUser.id = uuid.v4();
-        // ***Used to add a new user inside the array of the variable 'users' upper every time a new user create an account.
-        users.push(newUser)
-        // ***Status code 201 because it means 'created'.
-        res.status(201).json(newUser);
-    } else {
-        // ***Status 400 code because it means 'bad request'.
-        res.status(400).send('Users need names')
-    }
-});
+// app.post('/users', (req, res) => {
+//     // ***Creation of a new variable newUser, and that newUser variable is equal to the request body data format (a JSON object holding data about the account to create) sent by the user who wishes to create an account.
+//     // *** The req.body is only doable here because of the app.use(bodyParser.json()); line of code at the very top of this file (this body parser package installed and applied via a middleware is what enables to read data from the body object - without this code, not possible to read the body object).
+//     const newUser = req.body;
+//     // ***Different responses (status and return messages) depending on the output of the request processing.
+//     if (newUser.name) {
+//         // ***uuid.v4(); is possible to use it because of the package imported at the beginning of the file (const uuid = require('uuid');).
+//         newUser.id = uuid.v4();
+//         // ***Used to add a new user inside the array of the variable 'users' upper every time a new user create an account.
+//         users.push(newUser)
+//         // ***Status code 201 because it means 'created'.
+//         res.status(201).json(newUser);
+//     } else {
+//         // ***Status 400 code because it means 'bad request'.
+//         res.status(400).send('Users need names')
+//     }
+// });
 
+
+// ***REQUEST: Allow new users to register.
+// ***POST (WITH MONGOOSE): The request is equal to the 'CREATE' in the CRUD functions for systems that store data. Therefore, Express POST the data sent by the user at the endpoint '/users' and returns a JSON object containing data about the account created.
+// ***app.post block of code written to interact with the database (MongoDB) using Moogose models. 
+app.post('/users', (req, res) => {
+    //***Check if a user with the username provided by the client already exists.
+    //***The .findOne command is querying the ''Users'' model using Mongoose.
+    Users.findOne({ Username: req.body.Username })
+      .then((user) => {
+        if (user) {
+          //***If the given username does exist (if (user))), then API send back the appropriate response to the client (username thats trying to be create already exists).
+          return res.status(400).send(req.body.Username + ' already exists');
+        } else {
+          //***If the user that the client tries to create doesn’t exist, the Mongoose’s create command is used to CREATE the new user.
+          Users
+            //***The create command takes an object, where each key in the object corresponds to a certain field specified in the schema (from the “models.js” file for the User model) and each value is set to a value that is received from the request body (via req.body) sent by the client.
+            //***The use of req.body.Username (or req.body.Password or else) allows to collect all of the information from the HTTP request body sent by the client, use Mongoose to populate a user document inside the Users collection, then add it to the database.
+            //***Mongoose is translating here Node.js code into a MongoDB command that runs behind the scenes to insert a record into your ''Users'' collection. The application here uses Mongoose’s CREATE command on the model to execute this database operation on MongoDB automatically.
+            .create({
+              Username: req.body.Username,
+              Password: req.body.Password,
+              Email: req.body.Email,
+              Birthday: req.body.Birthday
+            })
+            //***After the document is created, a callback takes the document just added as a parameter (here, this new document is given the name ''user'', but it could have been named any other name).
+            //***Within this callback, a response is sent back to the client that contains both a status code and the document (called ''user'') that has been just created (res.status(201).json(newUser)). This gives the client feedback on his request, letting them know that it’s been completed.
+            .then((user) =>{res.status(201).json(user) })
+            //***Error-handling function - a catch-all in case the command/request runs into an error.
+            //***The .catch function will ''catch'' any problems that Mongoose encounters while running the create command. 
+          .catch((error) => {
+            console.error(error);
+            res.status(500).send('Error: ' + error);
+          })
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        res.status(500).send('Error: ' + error);
+      });
+  });
+
+
+// // ***REQUEST: Allow users to read data about all users.
+// // ***READ : The request is equal to the 'READ' in the CRUD functions for systems that store data. Therefore, Express GET route located at the endpoint '/users' and returns a JSON object containing data about the director requested, allowing the user to GET/READ the info.
+// app.get('/users', (req, res) => {
+//     //***The find() function in Mongoose grabs data on all documents within a collection (in this case is all the users in the ''Users'' collection). Rather than querying db.users.find() like on MongoDB (as we're not querying the database itself), Users.find() is used via Mongoose to query the Users model.
+//     //***As no conditions have been given for the query, data for all the documents will be returned.
+//     Users.find()
+//       .then((users) => {
+//         res.status(201).json(users);
+//       })
+//       //***Error-handling function at the end to catch any errors that may occur.
+//       .catch((err) => {
+//         console.error(err);
+//         res.status(500).send('Error: ' + err);
+//       });
+//   });
+
+
+// // ***REQUEST: Allow users to read data about a specific user based on username.
+// // ***READ (WITH MONGOOSE) : The request is equal to the 'READ' in the CRUD functions for systems that store data. Therefore, Express GET route located at the endpoint '/users/:Username' and returns a JSON object containing data about the director requested, allowing the user to GET/READ the info.  
+// Get a user by username
+app.get('/users/:Username', (req, res) => {
+    //***The findOne({ Username: req.params.Username }) function in Mongoose grabs data on the specified Username from the request. Rather than querying db.Users.findOne( { Title: "Silence of the Lambs" } ) like on MongoDB (as we're not querying the database itself), Users.findOne({ Username: req.params.Username }) is used via Mongoose to query the Users model.
+    Users.findOne({ Username: req.params.Username })
+    //***After the document is created, a response is sent back to the client with the user data (document) that was just read/requested. The parameter for this callback, which is named ''users'' here refers, by default, to the document that was just read.
+      .then((user) => {
+        res.json(user);
+      })
+      //***Error-handling function at the end to catch any errors that may occur.
+      .catch((err) => {
+        console.error(err);
+        res.status(500).send('Error: ' + err);
+      });
+  });
+  
 
 // ***REQUEST: Allow users to update their user info (name).
 // ***PUT : The request is equal to the 'UPDATE' in the CRUD functions for systems that store data. Therefore, Express UPDATE the information of a user located at the endpoint '/users/:id' and returns a JSON object containing data about the user (updated version).
