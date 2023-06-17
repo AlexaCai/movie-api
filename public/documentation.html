@@ -107,6 +107,7 @@
                     Name: Steven Spielberg <br>
                     Bio: American filmmaker... <br>
                     Birth: December 18, 1946 <br>
+                    Death: NA <br>
                     } <br>
                     ImageURL: https://www.imdb... <br>
                     }
@@ -140,6 +141,7 @@
                     Name: Steven Spielberg <br>
                     Bio: American filmmaker... <br>
                     Birth: December 18, 1946 <br>
+                    Death: NA <br>
                     } <br>
                     ImageURL: https://www.imdb... <br>
                     }
@@ -173,6 +175,7 @@
                         Name: Chris Columbus <br>
                         Bio: Chris Columbus is an... <br>
                         Birth: September 10, 1958 <br>
+                        Death: NA <br>
                     }
                 </td>
             </tr>
@@ -184,16 +187,22 @@
                 <td>JSON object holding data about the user who wants to create an account</td>
                 <td>
                     { <br>
-                        "name": "Eva Carlson" <br>
-                        "favoriteMovies": [ ] <br>
+                        "Name": "GoldenStar" <br>
+                        "Password": "SpaceDiscovery01" <br>
+                        "Email": "naty@hotmail.com" <br>
+                        "Birthday": "2002-04-10" <br>
+                        "favoriteMovies": [Jurassic Park] <br>
                     }
                 </td>
                 <td>JSON object holding data about the user's new account just created</td>
                 <td class="wide-column">
                     { <br>
-                        name: Eva Carlson <br>
-                        favoriteMovies: [ ] <br>
-                        id: df31675c-dc02-46cd-be70-fb000f551b9f <br>
+                        "_id": ObjectID("df31675c-dc02-46cd-be70-fb000f551b9f") <br>
+                        "Name": "GoldenStar" <br>
+                        "Password": "SpaceDiscovery01" <br>
+                        "Email": "naty@hotmail.com" <br>
+                        "Birthday": "2002-04-10" <br>
+                        "favoriteMovies": [Jurassic Park] <br>
                     }
                 </td>
             </tr>
@@ -205,17 +214,15 @@
                 <td>JSON object holding data the user wants to update</td>
                 <td>
                     { <br>
-                        "name: "Eva Carlson-Taylor" <br>
-                        "favoriteMovies": [ ] <br>
-                        "id": "df31675c-dc02-46cd-be70-fb000f551b9f" <br>
+                        "_id": ObjectID("df31675c-dc02-46cd-be70-fb000f551b9f") <br>
+                        "name: "Golden-Flying-Star" <br>
                     }
                 </td>
                 <td>JSON object holding data about the user's updated account</td>
                 <td class="wide-column">
                     { <br>
-                        name: Eva Carlson-Taylor <br>
-                        favoriteMovies: [ ] <br>
-                        id: df31675c-dc02-46cd-be70-fb000f551b9f <br>
+                        "_id": ObjectID("df31675c-dc02-46cd-be70-fb000f551b9f") <br>
+                        "name: "Golden-Flying-Star" <br>
                     }
                 </td>
             </tr>
