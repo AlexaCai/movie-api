@@ -193,7 +193,7 @@ let movies = [
 ];
 
 
-// ***REQUEST: Return a list of all movies to the user.
+// ***REQUEST: Return a list of all movies.
 // ***READ (with MONGOOSE) : The request is equal to the 'READ' in the CRUD functions for systems that store data. Therefore, Express GET route located at the endpoint '/movies' and returns a JSON object containing data about the movies list (data inside the variable movies upper), allowing the user to GET/READ the info.
 app.get('/movies', (req, res) => {
     //***The .find() function in Mongoose grabs data in the database of all the movies, since no specific movie was specified in the request. Rather than querying db.movies.find() like on MongoDB (as we're not querying the database itself), Movies.find() is used via Mongoose to query the Movies model.
@@ -210,7 +210,7 @@ app.get('/movies', (req, res) => {
 });
 
 
-// ***REQUEST: Return data - title, description, genre, director, image URL) about a single movie by title to the user.
+// ***REQUEST: Return data - title, description, genre, director, image URL) about a single movie by title .
 // ***READ (WITH MONGOOSE) : The request is equal to the 'READ' in the CRUD functions for systems that store data. Therefore, Express GET route located at the endpoint '/movies/:title' and returns a JSON object containing data about the movies requested, allowing the user to GET/READ the info.
 app.get('/movies/:Title', (req, res) => {
     //***The .findOne({ Title: req.params.Title }) function in Mongoose grabs data in the database on the specified Title from the request. Rather than querying db.movies.findOne( { Title: 'ABC' } ) like on MongoDB (as we're not querying the database itself), Movies.findOne({ Title: req.params.Title }) is used via Mongoose to query the Movies model.
