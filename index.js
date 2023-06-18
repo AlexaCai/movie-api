@@ -195,260 +195,348 @@ let movies = [
 
 // ***REQUEST: Return a list of all movies to the user.
 // ***READ : The request is equal to the 'READ' in the CRUD functions for systems that store data. Therefore, Express GET route located at the endpoint '/movies' and returns a JSON object containing data about the movies list (data inside the variable movies upper), allowing the user to GET/READ the info.
+// app.get('/movies', (req, res) => {
+//     res.status(200).json(movies);
+// });
+
+// ***REQUEST: Return a list of all movies to the user.
+// ***READ (with MONGOOSE) : The request is equal to the 'READ' in the CRUD functions for systems that store data. Therefore, Express GET route located at the endpoint '/movies' and returns a JSON object containing data about the movies list (data inside the variable movies upper), allowing the user to GET/READ the info.
 app.get('/movies', (req, res) => {
-    res.status(200).json(movies);
+    //***The .find() function in Mongoose grabs data in the database of all the movies, since no specific movie was specified in the request. Rather than querying db.movies.find() like on MongoDB (as we're not querying the database itself), Movies.find() is used via Mongoose to query the Movies model.
+    Movies.find()
+        //***After the document is created, a response is sent back to the client with the movies data (document) that was just read/requested. The parameter for this callback, which is named ''movies'' here refers, by default, to the documents (each movie = one document) that were just read.
+        .then((movies) => {
+            res.json(movies);
+        })
+        //***Error-handling function at the end to catch any errors that may occur.
+        .catch((err) => {
+            console.error(err);
+            res.status(500).send('Error: ' + err);
+        });
 });
 
 
-// ***REQUEST: Return data - title, description, genre, director, image URL) about a single movie by title to the user.
-// ***READ : The request is equal to the 'READ' in the CRUD functions for systems that store data. Therefore, Express GET route located at the endpoint '/movies/:title' and returns a JSON object containing data about the movies requested, allowing the user to GET/READ the info.
-app.get('/movies/:title', (req, res) => {
-    // ***Creation of a new variable that is equal to req.params.title, which in turn is equal to whatever value/title the user passes through the URL and use that accordingly. So in that case 'const title' will equal whatever title the user is looking for and has been placed in the URL. Note that 'const title = req.params.title;' is not used because 'const { title } = req.params;' used below does the exact same thing - it's just written differently.
-    // const title = req.params.title;
+// // ***REQUEST: Return data - title, description, genre, director, image URL) about a single movie by title to the user.
+// // ***READ : The request is equal to the 'READ' in the CRUD functions for systems that store data. Therefore, Express GET route located at the endpoint '/movies' and returns a JSON object containing data about the movies requested, allowing the user to GET/READ the info.
+// app.get('/movies/:title', (req, res) => {
+//     // ***Creation of a new variable that is equal to req.params.title, which in turn is equal to whatever value/title the user passes through the URL and use that accordingly. So in that case 'const title' will equal whatever title the user is looking for and has been placed in the URL. Note that 'const title = req.params.title;' is not used because 'const { title } = req.params;' used below does the exact same thing - it's just written differently.
+//     // const title = req.params.title;
 
-    // ***Creation of a new variable title and that title variable is equal to the property of the same name on the object that is on the right side of the equal sign.
-    const { title } = req.params;
-    // ***When 'movie.Title === title' ('movie.Title' being a movie title from the array list inside the 'movies' variable upper, and 'title' being the title searched by the user), send the current value of 'movie =>' out to the 'const movie' variable.
-    const movie = movies.find(movie => movie.Title === title);
+//     // ***Creation of a new variable title and that title variable is equal to the property of the same name on the object that is on the right side of the equal sign.
+//     const { title } = req.params;
+//     // ***When 'movie.Title === title' ('movie.Title' being a movie title from the array list inside the 'movies' variable upper, and 'title' being the title searched by the user), send the current value of 'movie =>' out to the 'const movie' variable.
+//     const movie = movies.find(movie => movie.Title === title);
 
-    // ***Different responses (status and return messages) depending on the output of the request processing.
-    if (movie) {
-        res.status(200).json(movie);
-    } else {
-        res.status(400).send('No such movie')
-    }
-});
-
-
-// ***REQUEST: Return data about a genre by name (e.g., “Thriller”).
-// ***READ : The request is equal to the 'READ' in the CRUD functions for systems that store data. Therefore, Express GET route located at the endpoint '/movies/genres/genreName' and returns a JSON object containing data about the genre requested, allowing the user to GET/READ the info.
-app.get('/movies/genre/:genreName', (req, res) => {
-
-    // ***Creation of a new variable genreName, and that genreName variable is equal to the property of the same name on the object that is on the right side of the equal sign.
-    const { genreName } = req.params;
-    // ***movies.find(movie => movie.Genre.Name === genreName).Genre; returns the value for the 'Genre' searched and present inside the array list in the movies variable upper. The '.Genre' at the end is important because that's what make it possible to returns the specific propertie of a searched 'Genre' from the array list movies. Otherwise, this method would returns the value of the entire object of a movie containing the searched genre.
-    const genre = movies.find(movie => movie.Genre.Name === genreName).Genre;
-
-    // ***Different responses (status and return messages) depending on the output of the request processing.
-    if (genre) {
-        res.status(200).json(genre);
-    } else {
-        res.status(400).send('No such genre')
-    }
-});
-
-
-// ***REQUEST: Return data about a director (bio and birth year) by name.
-// ***READ : The request is equal to the 'READ' in the CRUD functions for systems that store data. Therefore, Express GET route located at the endpoint '/movies/directors/:directorName' and returns a JSON object containing data about the director requested, allowing the user to GET/READ the info.
-app.get('/movies/directors/:directorName', (req, res) => {
-
-    // ***Creation of a new variable directorName, and that directorName variable is equal to the property of the same name on the object that is on the right side of the equal sign.
-    const { directorName } = req.params;
-    // ***movies.find(movie => movie.Director.Name === directorName).Director; returns the value for the 'Director' searched and present inside the array list in the movies variable upper. The '.Director' at the end is important because that's what make it possible to returns the specific propertie of a searched 'Director' from the array list movies. Otherwise, this method would returns the value of the entire object of a movie containing the searched director.
-    const director = movies.find(movie => movie.Director.Name === directorName).Director;
-
-    // ***Different responses (status and return messages) depending on the output of the request processing.
-    if (director) {
-        res.status(200).json(director);
-    } else {
-        res.status(400).send('No such director')
-    }
-});
-
-
-// ***REQUEST: Allow new users to register. 
-// ***POST : The request is equal to the 'CREATE' in the CRUD functions for systems that store data. Therefore, Express POST the data sent by the user at the endpoint '/users' and returns a JSON object containing data about the account created.
-// app.post('/users', (req, res) => {
-//     // ***Creation of a new variable newUser, and that newUser variable is equal to the request body data format (a JSON object holding data about the account to create) sent by the user who wishes to create an account.
-//     // *** The req.body is only doable here because of the app.use(bodyParser.json()); line of code at the very top of this file (this body parser package installed and applied via a middleware is what enables to read data from the body object - without this code, not possible to read the body object).
-//     const newUser = req.body;
 //     // ***Different responses (status and return messages) depending on the output of the request processing.
-//     if (newUser.name) {
-//         // ***uuid.v4(); is possible to use it because of the package imported at the beginning of the file (const uuid = require('uuid');).
-//         newUser.id = uuid.v4();
-//         // ***Used to add a new user inside the array of the variable 'users' upper every time a new user create an account.
-//         users.push(newUser)
-//         // ***Status code 201 because it means 'created'.
-//         res.status(201).json(newUser);
+//     if (movie) {
+//         res.status(200).json(movie);
 //     } else {
-//         // ***Status 400 code because it means 'bad request'.
-//         res.status(400).send('Users need names')
+//         res.status(400).send('No such movie')
 //     }
 // });
+
+// ***REQUEST: Return data - title, description, genre, director, image URL) about a single movie by title to the user.
+// ***READ (WITH MONGOOSE) : The request is equal to the 'READ' in the CRUD functions for systems that store data. Therefore, Express GET route located at the endpoint '/movies/:title' and returns a JSON object containing data about the movies requested, allowing the user to GET/READ the info.
+app.get('/movies/:Title', (req, res) => {
+    //***The .findOne({ Title: req.params.Title }) function in Mongoose grabs data in the database on the specified Title from the request. Rather than querying db.movies.findOne( { Title: 'ABC' } ) like on MongoDB (as we're not querying the database itself), Movies.findOne({ Title: req.params.Title }) is used via Mongoose to query the Movies model.
+    Movies.findOne({ Title: req.params.Title })
+        //***After the document is created, a response is sent back to the client with the movie data (document) that was just read/requested. The parameter for this callback, which is named ''movie'' here refers, by default, to the document that was just read.
+        .then((movie) => {
+            res.json(movie);
+        })
+        //***Error-handling function at the end to catch any errors that may occur.
+        .catch((err) => {
+            console.error(err);
+            res.status(500).send('Error: ' + err);
+        });
+});
+
+
+// // ***REQUEST: Return data about a genre by name (e.g., “Thriller”).
+// // ***READ : The request is equal to the 'READ' in the CRUD functions for systems that store data. Therefore, Express GET route located at the endpoint '/movies/genres/genreName' and returns a JSON object containing data about the genre requested, allowing the user to GET/READ the info.
+// app.get('/movies/genre/:genreName', (req, res) => {
+
+//     // ***Creation of a new variable genreName, and that genreName variable is equal to the property of the same name on the object that is on the right side of the equal sign.
+//     const { genreName } = req.params;
+//     // ***movies.find(movie => movie.Genre.Name === genreName).Genre; returns the value for the 'Genre' searched and present inside the array list in the movies variable upper. The '.Genre' at the end is important because that's what make it possible to returns the specific propertie of a searched 'Genre' from the array list movies. Otherwise, this method would returns the value of the entire object of a movie containing the searched genre.
+//     const genre = movies.find(movie => movie.Genre.Name === genreName).Genre;
+
+//     // ***Different responses (status and return messages) depending on the output of the request processing.
+//     if (genre) {
+//         res.status(200).json(genre);
+//     } else {
+//         res.status(400).send('No such genre')
+//     }
+// });
+
+// ***REQUEST: Return data about a genre by name (e.g.: Thriller).
+// ***READ (with MONGOOSE): The request is equal to the 'READ' in the CRUD functions for systems that store data. Therefore, Express GET route located at the endpoint '/movies/genres/genreName' and returns a JSON object containing data about the genre requested, allowing the user to GET/READ the info.
+app.get('/movies/genre/:genreName', (req, res) => {
+    //***The .findOne({ 'Genre.Name': req.params.genreName }) function in Mongoose grabs data in the database on the specified Genre from the request. Rather than querying db.movies.findOne( { Genre.Name: 'Drama' } ) like on MongoDB (as we're not querying the database itself), Movies.findOne({ 'Genre.Name': req.params.genreName }) is used via Mongoose to query the Movies model.
+    Movies.findOne({ 'Genre.Name': req.params.genreName })
+        //***After the document is created, a response is sent back to the client with the genre data that was just read/requested. The parameter for this callback, which is named ''genre'' here refers, by default, to the document that was just read.
+        .then((genre) => {
+            res.json(genre);
+        })
+        //***Error-handling function at the end to catch any errors that may occur.
+        .catch((err) => {
+            console.error(err);
+            res.status(500).send('Error: ' + err);
+        });
+});
+
+
+// // ***REQUEST: Return data about a director (bio and birth year) by name.
+// // ***READ : The request is equal to the 'READ' in the CRUD functions for systems that store data. Therefore, Express GET route located at the endpoint '/movies/directors/:directorName' and returns a JSON object containing data about the director requested, allowing the user to GET/READ the info.
+// app.get('/movies/directors/:directorName', (req, res) => {
+
+//     // ***Creation of a new variable directorName, and that directorName variable is equal to the property of the same name on the object that is on the right side of the equal sign.
+//     const { directorName } = req.params;
+//     // ***movies.find(movie => movie.Director.Name === directorName).Director; returns the value for the 'Director' searched and present inside the array list in the movies variable upper. The '.Director' at the end is important because that's what make it possible to returns the specific propertie of a searched 'Director' from the array list movies. Otherwise, this method would returns the value of the entire object of a movie containing the searched director.
+//     const director = movies.find(movie => movie.Director.Name === directorName).Director;
+
+//     // ***Different responses (status and return messages) depending on the output of the request processing.
+//     if (director) {
+//         res.status(200).json(director);
+//     } else {
+//         res.status(400).send('No such director')
+//     }
+// });
+
+// ***REQUEST: Return data about a director (bio and birth year) by name.
+// ***READ (with MONGOOSE): The request is equal to the 'READ' in the CRUD functions for systems that store data. Therefore, Express GET route located at the endpoint '/movies/directors/:directorName' and returns a JSON object containing data about the director requested, allowing the user to GET/READ the info.
+app.get('/movies/directors/:directorName', (req, res) => {
+    //***The .findOne({ 'Director.Name': req.params.directorName }) function in Mongoose grabs data in the database on the specified Director from the request. Rather than querying db.movies.findOne( { Director.Name: 'Thomas Carter' } ) like on MongoDB (as we're not querying the database itself), .findOne({ 'Director.Name': req.params.directorName }) is used via Mongoose to query the Movies model.
+    Movies.findOne({ 'Director.Name': req.params.directorName })
+        //***After the document is created, a response is sent back to the client with the director data that was just read/requested. The parameter for this callback, which is named ''director'' here refers, by default, to the document that was just read.
+        .then((director) => {
+            res.json(director);
+        })
+        //***Error-handling function at the end to catch any errors that may occur.
+        .catch((err) => {
+            console.error(err);
+            res.status(500).send('Error: ' + err);
+        });
+});
 
 
 // ***REQUEST: Allow new users to register.
 // ***POST (WITH MONGOOSE): The request is equal to the 'CREATE' in the CRUD functions for systems that store data. Therefore, Express POST the data sent by the user at the endpoint '/users' and returns a JSON object containing data about the account created.
-// ***app.post block of code written to interact with the database (MongoDB) using Moogose models. 
 app.post('/users', (req, res) => {
-    //***Check if a user with the username provided by the client already exists.
-    //***The .findOne command is querying the ''Users'' model using Mongoose.
-    Users.findOne({ Username: req.body.Username })
-      .then((user) => {
-        if (user) {
-          //***If the given username does exist (if (user))), then API send back the appropriate response to the client (username thats trying to be create already exists).
-          return res.status(400).send(req.body.Username + ' already exists');
-        } else {
-          //***If the user that the client tries to create doesn’t exist, the Mongoose’s create command is used to CREATE the new user.
-          Users
-            //***The create command takes an object, where each key in the object corresponds to a certain field specified in the schema (from the “models.js” file for the User model) and each value is set to a value that is received from the request body (via req.body) sent by the client.
-            //***The use of req.body.Username (or req.body.Password or else) allows to collect all of the information from the HTTP request body sent by the client, use Mongoose to populate a user document inside the Users collection, then add it to the database.
-            //***Mongoose is translating here Node.js code into a MongoDB command that runs behind the scenes to insert a record into your ''Users'' collection. The application here uses Mongoose’s CREATE command on the model to execute this database operation on MongoDB automatically.
-            .create({
-              Username: req.body.Username,
-              Password: req.body.Password,
-              Email: req.body.Email,
-              Birthday: req.body.Birthday
-            })
-            //***After the document is created, a callback takes the document just added as a parameter (here, this new document is given the name ''user'', but it could have been named any other name).
-            //***Within this callback, a response is sent back to the client that contains both a status code and the document (called ''user'') that has been just created (res.status(201).json(newUser)). This gives the client feedback on his request, letting them know that it’s been completed.
-            .then((user) =>{res.status(201).json(user) })
-            //***Error-handling function - a catch-all in case the command/request runs into an error.
-            //***The .catch function will ''catch'' any problems that Mongoose encounters while running the create command. 
-          .catch((error) => {
+    //***.findOne({ Name: req.body.Name }) first check if a user with the username provided by the client already exists. The .findOne command is querying the ''Users'' model using Mongoose.
+    Users.findOne({ Name: req.body.Name })
+        .then((user) => {
+            if (user) {
+                //***If the given name does exist, then app send back the appropriate response to the client (name thats trying to be create already exists).
+                return res.status(400).send(req.body.Name + ' already exists');
+            } else {
+                //***If the given name that the client tries to create doesn’t exist, the Mongoose’s create command is used to CREATE the new user.
+                Users
+                    //***The create command takes an object, where each key in the object corresponds to a certain field specified in the schema (from the 'models.js' file for the User model) and each value is set to a value that is received from the request body (via req.body) sent by the client.
+                    //***The use of req.body.Name (or req.body.Password or else) allows to collect all of the information from the HTTP request body sent by the client, use Mongoose to populate a user document inside the Users collection, then add it to the database.
+                    //***Mongoose is translating here Node.js code into a MongoDB command that runs behind the scenes to insert a record into your ''Users'' collection. The application here uses Mongoose’s CREATE command on the model to execute this database operation on MongoDB automatically.
+                    .create({
+                        Name: req.body.Name,
+                        Password: req.body.Password,
+                        Email: req.body.Email,
+                        Birthday: req.body.Birthday
+                    })
+                    //***After the document is created, a callback takes the document just added as a parameter (here, this new document is given the name ''user'', but it could have been named any other name).
+                    //***Within this callback, a response is sent back to the client that contains both a status code and the document (called ''user'') that has been just created (res.status(201).json(newUser)). This gives the client feedback on his request, letting them know that it’s been completed.
+                    .then((user) => { res.status(201).json(user) })
+                    //***Error-handling function - a catch-all in case the command/request runs into an error.
+                    //***The .catch function will ''catch'' any problems that Mongoose encounters while running the create command. 
+                    .catch((error) => {
+                        console.error(error);
+                        res.status(500).send('Error: ' + error);
+                    })
+            }
+        })
+        .catch((error) => {
             console.error(error);
             res.status(500).send('Error: ' + error);
-          })
+        });
+});
+
+
+// // ***REQUEST: Allow users to update their user info (name).
+// // ***PUT : The request is equal to the 'UPDATE' in the CRUD functions for systems that store data. Therefore, Express UPDATE the information of a user located at the endpoint '/users/:id' and returns a JSON object containing data about the user (updated version).
+// app.put('/users/:id', (req, res) => {
+//     // ***Creation of a new variable id and that id variable is equal to the property of the same name on the object that is on the right side of the equal sign.
+//     const { id } = req.params;
+//     // ***Creation of a new variable updatedUser, and that updatedUser variable is equal to the request body data format (a JSON object holding data about the update to do) sent by the user who wishes to update his/he account.
+//     // *** The req.body is only doable here because of the app.use(bodyParser.json()); line of code at the very top of this file (this body parser package installed and applied via a middleware is what enables to read data from the body object - without this code, not possible to read the body object).
+//     const updatedUser = req.body;
+//     // ***Used to make sure the user exist.
+//     // ***Note about the two == here : The 'user.id' in 'user.id == id' is a NUMBER (as seen in the 'users' variable array upper on the 'id' propertie), and the 'id' in the 'user.id == id' is a STRING pulled from the URL string '/users/:id' inserted by the user. Thats why in 'user.id == id', there are only two == used. Because if tree === are used (strict equality), the 'user.id' wouldnt be equal to 'id', but by using two ==, they will be equal (they will be true/satisfied condition, even if one is a NUMBER and the other is a STRING).
+//     let user = users.find(user => user.id == id);
+
+//     if (user) {
+//         // ***Used to make the update requested by the user.
+//         user.name = updatedUser.name;
+//         // ***Status 200 code because it means 'good request'.
+//         res.status(200).json(user);
+//     } else {
+//         // ***Status 400 code because it means 'bad request'.
+//         res.status(400).send('No such user');
+//     }
+// });
+
+//***REQUEST: Allow users to update their user info (name).
+//***PUT (with MONGOOSE): The request is equal to the 'UPDATE' in the CRUD functions for systems that store data. Therefore, Express UPDATE the information of a user located at the endpoint '/users/:Name' and returns a JSON object containing data about the user (updated version).
+app.put('/users/:Name', (req, res) => {
+    //***.findOneAndUpdate({ Name: req.body.params.Name }) searches for the user that wish to be updated in the database, via its name.
+    Users.findOneAndUpdate({ Name: req.params.Name }, {
+        //***$set is used to specifed which fields in the user document is to be update. The new values that are set on each of these specific fields to is extracted from the request body sent by the client.
+        $set:
+        {
+            Name: req.body.Name,
+            Password: req.body.Password,
+            Email: req.body.Email,
+            Birthday: req.body.Birthday
         }
-      })
-      .catch((error) => {
-        console.error(error);
-        res.status(500).send('Error: ' + error);
-      });
-  });
-
-
-// // ***REQUEST: Allow users to read data about all users.
-// // ***READ : The request is equal to the 'READ' in the CRUD functions for systems that store data. Therefore, Express GET route located at the endpoint '/users' and returns a JSON object containing data about the director requested, allowing the user to GET/READ the info.
-// app.get('/users', (req, res) => {
-//     //***The find() function in Mongoose grabs data on all documents within a collection (in this case is all the users in the ''Users'' collection). Rather than querying db.users.find() like on MongoDB (as we're not querying the database itself), Users.find() is used via Mongoose to query the Users model.
-//     //***As no conditions have been given for the query, data for all the documents will be returned.
-//     Users.find()
-//       .then((users) => {
-//         res.status(201).json(users);
-//       })
-//       //***Error-handling function at the end to catch any errors that may occur.
-//       .catch((err) => {
-//         console.error(err);
-//         res.status(500).send('Error: ' + err);
-//       });
-//   });
-
-
-// // ***REQUEST: Allow users to read data about a specific user based on username.
-// // ***READ (WITH MONGOOSE) : The request is equal to the 'READ' in the CRUD functions for systems that store data. Therefore, Express GET route located at the endpoint '/users/:Username' and returns a JSON object containing data about the director requested, allowing the user to GET/READ the info.  
-// Get a user by username
-app.get('/users/:Username', (req, res) => {
-    //***The findOne({ Username: req.params.Username }) function in Mongoose grabs data on the specified Username from the request. Rather than querying db.Users.findOne( { Title: "Silence of the Lambs" } ) like on MongoDB (as we're not querying the database itself), Users.findOne({ Username: req.params.Username }) is used via Mongoose to query the Users model.
-    Users.findOne({ Username: req.params.Username })
-    //***After the document is created, a response is sent back to the client with the user data (document) that was just read/requested. The parameter for this callback, which is named ''users'' here refers, by default, to the document that was just read.
-      .then((user) => {
-        res.json(user);
-      })
-      //***Error-handling function at the end to catch any errors that may occur.
-      .catch((err) => {
-        console.error(err);
-        res.status(500).send('Error: ' + err);
-      });
-  });
-  
-
-// ***REQUEST: Allow users to update their user info (name).
-// ***PUT : The request is equal to the 'UPDATE' in the CRUD functions for systems that store data. Therefore, Express UPDATE the information of a user located at the endpoint '/users/:id' and returns a JSON object containing data about the user (updated version).
-app.put('/users/:id', (req, res) => {
-    // ***Creation of a new variable id and that id variable is equal to the property of the same name on the object that is on the right side of the equal sign.
-    const { id } = req.params;
-    // ***Creation of a new variable updatedUser, and that updatedUser variable is equal to the request body data format (a JSON object holding data about the update to do) sent by the user who wishes to update his/he account.
-    // *** The req.body is only doable here because of the app.use(bodyParser.json()); line of code at the very top of this file (this body parser package installed and applied via a middleware is what enables to read data from the body object - without this code, not possible to read the body object).
-    const updatedUser = req.body;
-    // ***Used to make sure the user exist.
-    // ***Note about the two == here : The 'user.id' in 'user.id == id' is a NUMBER (as seen in the 'users' variable array upper on the 'id' propertie), and the 'id' in the 'user.id == id' is a STRING pulled from the URL string '/users/:id' inserted by the user. Thats why in 'user.id == id', there are only two == used. Because if tree === are used (strict equality), the 'user.id' wouldnt be equal to 'id', but by using two ==, they will be equal (they will be true/satisfied condition, even if one is a NUMBER and the other is a STRING).
-    let user = users.find(user => user.id == id);
-
-    if (user) {
-        // ***Used to make the update requested by the user.
-        user.name = updatedUser.name;
-        // ***Status 200 code because it means 'good request'.
-        res.status(200).json(user);
-    } else {
-        // ***Status 400 code because it means 'bad request'.
-        res.status(400).send('No such user');
-    }
+    },
+        //***{ new: true } specifies that, in the proceeding callback, the document that was just updated is the one to be returned.
+        { new: true }
+    )
+        //***Answer to the client if the update worked ('updatedUser' being the newly updated data/document of the user).
+        .then((updatedUser) => {
+            res.json(updatedUser);
+        })
+        //***Error-handling function at the end to catch any errors that may occur.
+        .catch((err) => {
+            console.error(err);
+            res.status(500).send('Error: ' + err);
+        })
 });
 
 
-// ***REQUEST: Allow users to add a movie to their list of favorites.
-// ***POST : The request is equal to the 'CREATE' in the CRUD functions for systems that store data (but could also have been an UPDATE). Therefore, Express POST the data sent by the user at the endpoint '/users/:id/:movieTitle' and returns a confirmation message.
-app.post('/users/:id/:movieTitle', (req, res) => {
-    // ***Creation of a new variable id, movieTitle and that id, movieTitle variable is equal to the property of the same name on the object that is on the right side of the equal sign.
-    const { id, movieTitle } = req.params;
-    // ***Used to make sure the user exist.
-    // ***Note about the two == here : The 'user.id' in 'user.id == id' is a NUMBER (as seen in the 'users' variable array upper on the 'id' propertie), and the 'id' in the 'user.id == id' is a STRING pulled from the URL string '/users/:id' inserted by the user. Thats why in 'user.id == id', there are only two == used. Because if tree === are used (strict equality), the 'user.id' wouldnt be equal to 'id', but by using two ==, they will be equal (they will be true/satisfied condition, even if one is a NUMBER and the other is a STRING).
-    let user = users.find(user => user.id == id);
+// // ***REQUEST: Allow users to add a movie to their list of favorites.
+// // ***POST : The request is equal to the 'CREATE' in the CRUD functions for systems that store data (but could also have been an UPDATE). Therefore, Express POST the data sent by the user at the endpoint '/users/:id/:movieTitle' and returns a confirmation message.
+// app.post('/users/:id/:movieTitle', (req, res) => {
+//     // ***Creation of a new variable id, movieTitle and that id, movieTitle variable is equal to the property of the same name on the object that is on the right side of the equal sign.
+//     const { id, movieTitle } = req.params;
+//     // ***Used to make sure the user exist.
+//     // ***Note about the two == here : The 'user.id' in 'user.id == id' is a NUMBER (as seen in the 'users' variable array upper on the 'id' propertie), and the 'id' in the 'user.id == id' is a STRING pulled from the URL string '/users/:id' inserted by the user. Thats why in 'user.id == id', there are only two == used. Because if tree === are used (strict equality), the 'user.id' wouldnt be equal to 'id', but by using two ==, they will be equal (they will be true/satisfied condition, even if one is a NUMBER and the other is a STRING).
+//     let user = users.find(user => user.id == id);
 
-    // ***If the user is found, below actions happen.
-    // ***Different responses (status and return messages) depending on the output of the request processing.
-    if (user) {
-        // ***Used to add a new favorite movie selected by a user inside the array 'favoriteMovies' of his/her name in the variable 'users' upper.
-        user.favoriteMovies.push(movieTitle)
-        // ***Status 200 code because it means 'good request'.
-        res.status(200).send(movieTitle + ' has been added to user ' + id + '\'s list of favorite movies.');
-    } else {
-        // ***Status 400 code because it means 'bad request'.
-        res.status(400).send('Could not execute the request')
-    }
+//     // ***If the user is found, below actions happen.
+//     // ***Different responses (status and return messages) depending on the output of the request processing.
+//     if (user) {
+//         // ***Used to add a new favorite movie selected by a user inside the array 'favoriteMovies' of his/her name in the variable 'users' upper.
+//         user.favoriteMovies.push(movieTitle)
+//         // ***Status 200 code because it means 'good request'.
+//         res.status(200).send(movieTitle + ' has been added to user ' + id + '\'s list of favorite movies.');
+//     } else {
+//         // ***Status 400 code because it means 'bad request'.
+//         res.status(400).send('Could not execute the request')
+//     }
+// });
+
+// // ***REQUEST: Allow users to add a movie to their list of favorites.
+// // ***POST (with MONGOOSE) : The request is equal to the 'CREATE' in the CRUD functions for systems that store data (but could also have been an UPDATE). Therefore, Express POST the data sent by the user at the endpoint '/users/:Name/movies/:MovieID' and returns a confirmation message.
+app.post('/users/:Name/movies/:MovieID', (req, res) => {
+    Users.findOneAndUpdate({ Name: req.params.Name }, {
+       $push: { FavoriteMovies: req.params.MovieID }
+     },
+     { new: true }
+     )
+     //***Answer to the client if the update worked ('updatedUser' being the newly updated data/document of the user).
+     .then((updatedUserMovie) => {
+         res.json(updatedUserMovie);
+     })
+     //***Error-handling function at the end to catch any errors that may occur.
+     .catch((err) => {
+         console.error(err);
+         res.status(500).send('Error: ' + err);
+     })
 });
 
 
-// ***REQUEST: Allow users to remove a movie from their list of favorites.
-// ***DELETE : The request is equal to the 'DELETE' in the CRUD functions for systems that store data. Therefore, Express DELETE the data sent by the user at the endpoint '/users/:id/:movieTitle' and returns a JSON object containing data about the account created.
-app.delete('/users/:id/:movieTitle', (req, res) => {
-    // ***Creation of a new variable id, movieTitle and that id, movieTitle variable is equal to the property of the same name on the object that is on the right side of the equal sign.
-    const { id, movieTitle } = req.params;
-    // ***Used to make sure the user exist.
-    // ***Note about the two == here : The 'user.id' in 'user.id == id' is a NUMBER (as seen in the 'users' variable array upper on the 'id' propertie), and the 'id' in the 'user.id == id' is a STRING pulled from the URL string '/users/:id' inserted by the user. Thats why in 'user.id == id', there are only two == used. Because if tree === are used (strict equality), the 'user.id' wouldnt be equal to 'id', but by using two ==, they will be equal (they will be true/satisfied condition, even if one is a NUMBER and the other is a STRING).
-    let user = users.find(user => user.id == id);
+// // ***REQUEST: Allow users to remove a movie from their list of favorites.
+// // ***DELETE : The request is equal to the 'DELETE' in the CRUD functions for systems that store data. Therefore, Express DELETE the data sent by the user at the endpoint '/users/:id/:movieTitle' and returns a JSON object containing data about the account for which the movie has been deleted.
+// app.delete('/users/:id/:movieTitle', (req, res) => {
+//     // ***Creation of a new variable id, movieTitle and that id, movieTitle variable is equal to the property of the same name on the object that is on the right side of the equal sign.
+//     const { id, movieTitle } = req.params;
+//     // ***Used to make sure the user exist.
+//     // ***Note about the two == here : The 'user.id' in 'user.id == id' is a NUMBER (as seen in the 'users' variable array upper on the 'id' propertie), and the 'id' in the 'user.id == id' is a STRING pulled from the URL string '/users/:id' inserted by the user. Thats why in 'user.id == id', there are only two == used. Because if tree === are used (strict equality), the 'user.id' wouldnt be equal to 'id', but by using two ==, they will be equal (they will be true/satisfied condition, even if one is a NUMBER and the other is a STRING).
+//     let user = users.find(user => user.id == id);
 
-    // ***If the user is found, below actions happen.
-    // ***Different responses (status and return messages) depending on the output of the request processing.
-    if (user) {
-        // ***Used to removed a favorite movie selected by a user inside the array 'favoriteMovies' of his/her name in the variable 'users' upper.
-        // ***For the 'user.favoriteMovies.filter()', '.filter' is a method that sits on an array and take a function as an internal argument.
-        // ***(title => title !== movieTitle) specify that only want the movies in our favorite movie array (favoriteMovies array for each user inside the variable 'users' upper) that dont match (!==) the one we are trying to remove.
-        // ***Tree === are used (strict equality) in 'title !== movieTitle' because both values (for 'title' and 'movieTitle') are two strings. When comparing strings to strings, possible to use strict equality.
-        user.favoriteMovies = user.favoriteMovies.filter(title => title !== movieTitle)
-        // ***Status 200 code because it means 'good request'.
-        res.status(200).send(movieTitle + ' has been removed from user ' + id + '\'s list of favorite movies.');
-    } else {
-        // ***Status 400 code because it means 'bad request'.
-        res.status(400).send('Could not execute the request')
-    }
+//     // ***If the user is found, below actions happen.
+//     // ***Different responses (status and return messages) depending on the output of the request processing.
+//     if (user) {
+//         // ***Used to removed a favorite movie selected by a user inside the array 'favoriteMovies' of his/her name in the variable 'users' upper.
+//         // ***For the 'user.favoriteMovies.filter()', '.filter' is a method that sits on an array and take a function as an internal argument.
+//         // ***(title => title !== movieTitle) specify that only want the movies in our favorite movie array (favoriteMovies array for each user inside the variable 'users' upper) that dont match (!==) the one we are trying to remove.
+//         // ***Tree === are used (strict equality) in 'title !== movieTitle' because both values (for 'title' and 'movieTitle') are two strings. When comparing strings to strings, possible to use strict equality.
+//         user.favoriteMovies = user.favoriteMovies.filter(title => title !== movieTitle)
+//         // ***Status 200 code because it means 'good request'.
+//         res.status(200).send(movieTitle + ' has been removed from user ' + id + '\'s list of favorite movies.');
+//     } else {
+//         // ***Status 400 code because it means 'bad request'.
+//         res.status(400).send('Could not execute the request')
+//     }
+// });
+
+//***REQUEST: Allow users to remove a movie from their list of favorites.
+//***DELETE (with MONGOOSE) : The request is equal to the 'DELETE' in the CRUD functions for systems that store data. Therefore, Express DELETE the data sent by the user at the endpoint '/users/:Name/movies/:MovieID' and returns a JSON object containing data about the account for which the movie has been deleted.
+//***Code exactly the same as when a client add a movieID, only this time the $pull operator is used instead of the $push operator, and the app.post is modified to app.delete.
+app.delete('/users/:Name/movies/:MovieID', (req, res) => {
+    Users.findOneAndUpdate({ Name: req.params.Name }, {
+       $pull: { FavoriteMovies: req.params.MovieID }
+     },
+     { new: true }
+     )
+     //***Answer to the client if the update worked ('updatedUser' being the newly updated data/document of the user).
+     .then((updatedUserMovie) => {
+         res.json(updatedUserMovie);
+     })
+     //***Error-handling function at the end to catch any errors that may occur.
+     .catch((err) => {
+         console.error(err);
+         res.status(500).send('Error: ' + err);
+     })
 });
 
 
 // ***REQUEST: Allow existing users to deregister.
 // ***DELETE : The request is equal to the 'DELETE' in the CRUD functions for systems that store data. Therefore, Express DELETE the data sent by the user at the endpoint '/users/:id' and returns a JSON object containing data about the account created.
-app.delete('/users/:id', (req, res) => {
-    // ***Creation of a new variable id, and that id variable is equal to the property of the same name on the object that is on the right side of the equal sign.
-    const { id } = req.params;
-    // ***Used to make sure the user exist.
-    // ***Note about the two == here : The 'user.id' in 'user.id == id' is a NUMBER (as seen in the 'users' variable array upper on the 'id' propertie), and the 'id' in the 'user.id == id' is a STRING pulled from the URL string '/users/:id' inserted by the user. Thats why in 'user.id == id', there are only two == used. Because if tree === are used (strict equality), the 'user.id' wouldnt be equal to 'id', but by using two ==, they will be equal (they will be true/satisfied condition, even if one is a NUMBER and the other is a STRING).
-    let user = users.find(user => user.id == id);
+// app.delete('/users/:id', (req, res) => {
+//     // ***Creation of a new variable id, and that id variable is equal to the property of the same name on the object that is on the right side of the equal sign.
+//     const { id } = req.params;
+//     // ***Used to make sure the user exist.
+//     // ***Note about the two == here : The 'user.id' in 'user.id == id' is a NUMBER (as seen in the 'users' variable array upper on the 'id' propertie), and the 'id' in the 'user.id == id' is a STRING pulled from the URL string '/users/:id' inserted by the user. Thats why in 'user.id == id', there are only two == used. Because if tree === are used (strict equality), the 'user.id' wouldnt be equal to 'id', but by using two ==, they will be equal (they will be true/satisfied condition, even if one is a NUMBER and the other is a STRING).
+//     let user = users.find(user => user.id == id);
 
-    // ***If the user is found, below actions happen.
-    // ***Different responses (status and return messages) depending on the output of the request processing.
-    if (user) {
-        // ***For the 'user.filter()', '.filter' is a method that sits on an array and take a function as an internal argument.
-        // ***(user => user.id !== id) specify that only want the users in the users array that dont match (!==) the one we are trying to remove.
-        // ***Note about the two == here : The 'user.id' in 'user.id == id' is a NUMBER (as seen in the 'users' variable array upper on the 'id' propertie), and the 'id' in the 'user.id == id' is a STRING pulled from the URL string '/users/:id' inserted by the user. Thats why in 'user.id == id', there are only two == used. Because if tree === are used (strict equality), the 'user.id' wouldnt be equal to 'id', but by using two ==, they will be equal (they will be true/satisfied condition, even if one is a NUMBER and the other is a STRING).
-        users = users.filter(user => user.id != id);
-        // ***Status 200 code because it means 'good request'.
-        res.status(200).send('User ' + id + ' has been deleted.');
-    } else {
-        // ***Status 400 code because it means 'bad request'.
-        res.status(400).send('Could not execute the request')
-    }
-});
+//     // ***If the user is found, below actions happen.
+//     // ***Different responses (status and return messages) depending on the output of the request processing.
+//     if (user) {
+//         // ***For the 'user.filter()', '.filter' is a method that sits on an array and take a function as an internal argument.
+//         // ***(user => user.id !== id) specify that only want the users in the users array that dont match (!==) the one we are trying to remove.
+//         // ***Note about the two == here : The 'user.id' in 'user.id == id' is a NUMBER (as seen in the 'users' variable array upper on the 'id' propertie), and the 'id' in the 'user.id == id' is a STRING pulled from the URL string '/users/:id' inserted by the user. Thats why in 'user.id == id', there are only two == used. Because if tree === are used (strict equality), the 'user.id' wouldnt be equal to 'id', but by using two ==, they will be equal (they will be true/satisfied condition, even if one is a NUMBER and the other is a STRING).
+//         users = users.filter(user => user.id != id);
+//         // ***Status 200 code because it means 'good request'.
+//         res.status(200).send('User ' + id + ' has been deleted.');
+//     } else {
+//         // ***Status 400 code because it means 'bad request'.
+//         res.status(400).send('Could not execute the request')
+//     }
+// });
+
+app.delete('/users/:Name', (req, res) => {
+    Users.findOneAndRemove({ Name: req.params.Name })
+      .then((user) => {
+        if (!user) {
+          res.status(400).send(req.params.Name + ' was not found');
+        } else {
+          res.status(200).send(req.params.Name + ' was deleted.');
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+        res.status(500).send('Error: ' + err);
+      });
+  });
 
 
 // ***Express GET route located at the endpoint '/' and that returns a string default message.
