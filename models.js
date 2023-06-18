@@ -11,16 +11,17 @@ let movieSchema = mongoose.Schema({
     },
     Director: {
       Name: String,
-      Bio: String
+      Bio: String,
+      Birth: Date,
+      Death: Date
     },
-    Actors: [String],
     ImagePath: String,
     Featured: Boolean
   });
 
   //*** Schema for the ''Users'' collection (schema is defined through a set of keys and values that dictate the format for the documents the collection).The keys and values can follow a number of different formats.
   let userSchema = mongoose.Schema({
-    Username: {type: String, required: true},
+    Name: {type: String, required: true},
     Password: {type: String, required: true},
     Email: {type: String, required: true},
     Birthday: Date,
