@@ -1,27 +1,21 @@
-//***This endpoint could technically be alongside with the other endpoints (in the index.js file), but since we implement a special authentication measures for this request, this endpoint is added in a separate file here (auth.js).
-//***This has to be the same key use in the JWTStrategy in de passport.js file.
-const jwtSecret = 'your_jwt_secret'; 
+const jwtSecret = 'your_jwt_secret'; // This has to be the same key used in the JWTStrategy
 
 const jwt = require('jsonwebtoken'),
   passport = require('passport');
 
-//***Rquire the local passport.js file.
-require('./passport');
+require('./passport'); // Your local passport file
 
 
 let generateJWTToken = (user) => {
   return jwt.sign(user, jwtSecret, {
-    //***Name enconding in the JWT
-    subject: user.Username, 
-    //***Specify that the token will expire in 7 days
-    expiresIn: '7d', 
-    //***Algorithm used to ''sign'' or encode the values of the JWT
-    algorithm: 'HS256' 
+    subject: user.Username, // This is the username you’re encoding in the JWT
+    expiresIn: '7d', // This specifies that the token will expire in 7 days
+    algorithm: 'HS256' // This is the algorithm used to “sign” or encode the values of the JWT
   });
 }
 
 
-//***POST login
+/* POST login. */
 module.exports = (router) => {
   router.post('/login', (req, res) => {
     passport.authenticate('local', { session: false }, (error, user, info) => {
