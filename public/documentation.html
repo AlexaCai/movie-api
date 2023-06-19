@@ -213,7 +213,7 @@
                 <td>JSON object holding data about the user who wants to create an account</td>
                 <td>
                     { <br>
-                    "Name": "req.body.Name", <br>
+                    "Username": "req.body.Username", <br>
                     "Password": "req.body.Password", <br>
                     "Email": "req.body.Email", <br>
                     "Birthday": "req.body.Birthday" <br>
@@ -222,7 +222,7 @@
                 <td>JSON object holding data about the user's new account just created</td>
                 <td class="wide-column">
                     { <br>
-                    "Name": "Jake Ty", <br>
+                    "Username": "Jake Ty", <br>
                     "Password": "SuperSmash", <br>
                     "Email": "j-t@hotmail.com", <br>
                     "Birthday": "1995-09-08T00:00:00.000Z", <br>
@@ -233,16 +233,16 @@
                 </td>
             </tr>
             <tr>
-                <td>Allow users to update their user info (name)</td>
-                <td>/users/:Name</td>
-                <td>:Name</td>
+                <td>Allow users to update their user info (Username)</td>
+                <td>/users/:Username</td>
+                <td>:Username</td>
                 <td>PUT</td>
                 <td>JSON object holding data the user wants to update</td>
                 <td>
                     (Update on original Jake Ty account) <br> 
                     <br>
                     { <br>
-                    "Name": "Jake TyUP", <br>
+                    "Username": "Jake TyUP", <br>
                     "Password": "superUP.", <br>
                     "Email": "UP@hotmail.com", <br>
                     "Birthday": "1995-09-08T00:00:00.000Z" <br>
@@ -252,7 +252,7 @@
                 <td class="wide-column">
                     { <br>
                     "_id": "648e8630e9d9abf7...", <br>
-                    "Name": "Jake TyUP", <br>
+                    "Username": "Jake TyUP", <br>
                     "Password": "superUP.", <br>
                     "Email": "UP@hotmail.com", <br>
                     "Birthday": "1995-09-08T00:00:00.000Z", <br>
@@ -262,8 +262,8 @@
             </tr>
             <tr>
                 <td>Allow users to add a movie to their list of favorites</td>
-                <td>/users/:Name/movies/:movieID</td>
-                <td>:Name and :movieID</td>
+                <td>/users/:Username/movies/:movieID</td>
+                <td>:Username and :movieID</td>
                 <td>POST</td>
                 <td>Not applicable</td>
                 <td>Not applicable</td>
@@ -271,7 +271,7 @@
                 <td class="wide-column">
                     { <br>
                         "_id": "648e8630e9d9abf7...", <br>
-                        "Name": "Jake TyUP", <br>
+                        "Username": "Jake TyUP", <br>
                         "Password": "superUP.", <br>
                         "Email": "UP@hotmail.com", <br>
                         "Birthday": "1995-09-08T00:00:00.000Z", <br>
@@ -282,8 +282,8 @@
             </tr>
             <tr>
                 <td>Allow users to remove a movie from their list of favorites</td>
-                <td>/users/:Name/movies/:movieID</td>
-                <td>:Name and :movieID</td>
+                <td>/users/:Username/movies/:movieID</td>
+                <td>:Username and :movieID</td>
                 <td>DELETE</td>
                 <td>Not applicable</td>
                 <td>Not applicable</td>
@@ -291,7 +291,7 @@
                 <td class="wide-column">
                     { <br>
                         "_id": "648e8630e9d9abf7...", <br>
-                        "Name": "Jake TyUP", <br>
+                        "Username": "Jake TyUP", <br>
                         "Password": "superUP.", <br>
                         "Email": "UP@hotmail.com", <br>
                         "Birthday": "1995-09-08T00:00:00.000Z", <br>
@@ -302,8 +302,8 @@
             </tr>
             <tr>
                 <td>Allow existing users to deregister</td>
-                <td>/users/:Name</td>
-                <td>:Name</td>
+                <td>/users/:Username</td>
+                <td>:Username</td>
                 <td>DELETE</td>
                 <td>Not applicable</td>
                 <td>Not applicable</td>
