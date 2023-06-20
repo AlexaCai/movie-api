@@ -3,6 +3,23 @@ const express = require('express');
 // ***Used to declare a variable that encapsulates Express’s functionality to configure the web server. This new variable is what will be use to route HTTP requests and responses.
 const app = express();
 
+// ***Used to import CORs module (). This code specifies that the app (defined upper by ''const app = express();'') uses CORS.
+//***CORs allows to control which domains have access to the API’s server. By controlling who has access to the API, its possible to keep it protected from malicious entities. 
+const cors = require('cors');
+//***Code below, related to CORs, makes sure only certain origins are given access to the app. The above code creates a list of allowed domains within the variable ''allowedOrigins'', then compares the domains of any incoming request with this list and either allows it (if the domain is on the list) or returns an error (if the domain isn’t on the list).
+let allowedOrigins = ['http://localhost:8080', 'http://testsite.com'];
+
+app.use(cors({
+  origin: (origin, callback) => {
+    if(!origin) return callback(null, true);
+    if(allowedOrigins.indexOf(origin) === -1){ // If a specific origin isn’t found on the list of allowed origins
+      let message = 'The CORS policy for this application doesn’t allow access from origin ' + origin;
+      return callback(new Error(message ), false);
+    }
+    return callback(null, true);
+  }
+}));
+
 // ***Used to import Body-parser module.
 const bodyParser = require('body-parser')
 // Used as the application of the body-parser as middleware into the app.
@@ -274,6 +291,8 @@ app.get('/movies/directors/:directorName', passport.authenticate('jwt', {session
 // ***REQUEST: Allow new users to register.
 // ***POST (WITH MONGOOSE): The request is equal to the 'CREATE' in the CRUD functions for systems that store data. Therefore, Express POST the data sent by the user at the endpoint '/users' and returns a JSON object containing data about the account created.
 app.post('/users', (req, res) => {
+    //***Used to hash any password entered by the user when registering before storing it in the MongoDB database.
+    let hashedPassword = Users.hashPassword(req.body.Password);
     //***.findOne({ Name: req.body.Name }) first check if a user with the name provided by the client already exists. The .findOne command is querying the ''Users'' model using Mongoose.
     Users.findOne({ Username: req.body.Username })
         .then((user) => {
@@ -288,7 +307,7 @@ app.post('/users', (req, res) => {
                     //***Mongoose is translating here Node.js code into a MongoDB command that runs behind the scenes to insert a record into your ''Users'' collection. The application here uses Mongoose’s CREATE command on the model to execute this database operation on MongoDB automatically.
                     .create({
                         Username: req.body.Username,
-                        Password: req.body.Password,
+                        Password: hashedPassword,
                         Email: req.body.Email,
                         Birthday: req.body.Birthday
                     })
