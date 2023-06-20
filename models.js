@@ -1,3 +1,7 @@
+//***''bycrypt'' is a module that hashes users’ passwords and compare hashed passwords every time users log in in order to ensure a more secure login authentication process.
+//***Hashing is the process of turning data into a string of text or numbers that can’t be turned back into the original string. Once the data has been hashed, it’s no longer accessible to anyone.
+const bcrypt = require('bcrypt');
+
 //*** Mongoose is installed as a local project dependency like many of the other JavaScript packages. This line of code require(); the Mongoose package to be used in that file.
 const mongoose = require('mongoose');
 
@@ -27,6 +31,14 @@ let movieSchema = mongoose.Schema({
     Birthday: Date,
     FavoriteMovies: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Movie' }]
   });
+
+  userSchema.statics.hashPassword = (password) => {
+    return bcrypt.hashSync(password, 10);
+  };
+  
+  userSchema.methods.validatePassword = function(password) {
+    return bcrypt.compareSync(password, this.Password);
+  };
   
   //*** Create collections called ''db.movies'' and ''db.users'' within the MongoDB database. It creates models that use the schemas defined upper.
   let Movie = mongoose.model('Movie', movieSchema);
