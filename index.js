@@ -38,6 +38,9 @@ require('./passport');
 // ***Used to import Uuid module.
 const uuid = require('uuid');
 
+//***Used to import Express-validator module. This is a JavaScript libraries used to add validation (to protect against some attacks) to a Node.js/Express application.
+const { check, validationResult } = require('express-validator');
+
 // ***Used to import Morgan (preexisting library as a logging middleware, equipped to log any and all useful information about a request)
 const morgan = require('morgan');
 // ***The 'common' parameter in app.use(morgan('common')); below specifies that requests should be logged using Morgan’s 'common' format, which logs basic data such as IP address, the time of the request, the request method and path, as well as the status code that was sent back as a response. When running code with app.use(morgan('common')); this code will returns parts of the “common” format console logging into the terminal (such as date and time of request, the method such as GET, URL path, response code and number of characters of the response that was sent back).
