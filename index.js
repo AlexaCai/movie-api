@@ -10,14 +10,14 @@ const cors = require('cors');
 let allowedOrigins = ['http://localhost:8080', 'http://testsite.com'];
 
 app.use(cors({
-  origin: (origin, callback) => {
-    if(!origin) return callback(null, true);
-    if(allowedOrigins.indexOf(origin) === -1){ // If a specific origin isn’t found on the list of allowed origins
-      let message = 'The CORS policy for this application doesn’t allow access from origin ' + origin;
-      return callback(new Error(message ), false);
+    origin: (origin, callback) => {
+        if (!origin) return callback(null, true);
+        if (allowedOrigins.indexOf(origin) === -1) { // If a specific origin isn’t found on the list of allowed origins
+            let message = 'The CORS policy for this application doesn’t allow access from origin ' + origin;
+            return callback(new Error(message), false);
+        }
+        return callback(null, true);
     }
-    return callback(null, true);
-  }
 }));
 
 // ***Used to import Body-parser module.
@@ -242,7 +242,7 @@ app.get('/movies', passport.authenticate('jwt', { session: false }), (req, res) 
 
 // ***REQUEST: Return data - title, description, genre, director, image URL) about a single movie by title .
 // ***READ (WITH MONGOOSE) : The request is equal to the 'READ' in the CRUD functions for systems that store data. Therefore, Express GET route located at the endpoint '/movies/:title' and returns a JSON object containing data about the movies requested, allowing the user to GET/READ the info.
-app.get('/movies/:Title', passport.authenticate('jwt', {session: false}), (req, res) => {
+app.get('/movies/:Title', passport.authenticate('jwt', { session: false }), (req, res) => {
     //***The .findOne({ Title: req.params.Title }) function in Mongoose grabs data in the database on the specified Title from the request. Rather than querying db.movies.findOne( { Title: 'ABC' } ) like on MongoDB (as we're not querying the database itself), Movies.findOne({ Title: req.params.Title }) is used via Mongoose to query the Movies model.
     Movies.findOne({ Title: req.params.Title })
         //***After the document is created, a response is sent back to the client with the movie data (document) that was just read/requested. The parameter for this callback, which is named ''movie'' here refers, by default, to the document that was just read.
@@ -259,7 +259,7 @@ app.get('/movies/:Title', passport.authenticate('jwt', {session: false}), (req, 
 
 // ***REQUEST: Return data about a genre by name (e.g.: Thriller).
 // ***READ (with MONGOOSE): The request is equal to the 'READ' in the CRUD functions for systems that store data. Therefore, Express GET route located at the endpoint '/movies/genres/genreName' and returns a JSON object containing data about the genre requested, allowing the user to GET/READ the info.
-app.get('/movies/genre/:genreName', passport.authenticate('jwt', {session: false}), (req, res) => {
+app.get('/movies/genre/:genreName', passport.authenticate('jwt', { session: false }), (req, res) => {
     //***The .findOne({ 'Genre.Name': req.params.genreName }) function in Mongoose grabs data in the database on the specified Genre from the request. Rather than querying db.movies.findOne( { Genre.Name: 'Drama' } ) like on MongoDB (as we're not querying the database itself), Movies.findOne({ 'Genre.Name': req.params.genreName }) is used via Mongoose to query the Movies model.
     Movies.find({ 'Genre.Name': req.params.genreName })
         //***After the document is created, a response is sent back to the client with the genre data that was just read/requested. The parameter for this callback, which is named ''genre'' here refers, by default, to the document that was just read.
@@ -276,7 +276,7 @@ app.get('/movies/genre/:genreName', passport.authenticate('jwt', {session: false
 
 // ***REQUEST: Return data about a director (bio and birth year) by name.
 // ***READ (with MONGOOSE): The request is equal to the 'READ' in the CRUD functions for systems that store data. Therefore, Express GET route located at the endpoint '/movies/directors/:directorName' and returns a JSON object containing data about the director requested, allowing the user to GET/READ the info.
-app.get('/movies/directors/:directorName', passport.authenticate('jwt', {session: false}), (req, res) => {
+app.get('/movies/directors/:directorName', passport.authenticate('jwt', { session: false }), (req, res) => {
     //***The .findOne({ 'Director.Name': req.params.directorName }) function in Mongoose grabs data in the database on the specified Director from the request. Rather than querying db.movies.findOne( { Director.Name: 'Thomas Carter' } ) like on MongoDB (as we're not querying the database itself), .findOne({ 'Director.Name': req.params.directorName }) is used via Mongoose to query the Movies model.
     Movies.find({ 'Director.Name': req.params.directorName })
         //***After the document is created, a response is sent back to the client with the director data that was just read/requested. The parameter for this callback, which is named ''director'' here refers, by default, to the document that was just read.
@@ -291,50 +291,64 @@ app.get('/movies/directors/:directorName', passport.authenticate('jwt', {session
 });
 
 
-// ***REQUEST: Allow new users to register.
-// ***POST (WITH MONGOOSE): The request is equal to the 'CREATE' in the CRUD functions for systems that store data. Therefore, Express POST the data sent by the user at the endpoint '/users' and returns a JSON object containing data about the account created.
-app.post('/users', (req, res) => {
-    //***Used to hash any password entered by the user when registering before storing it in the MongoDB database.
-    let hashedPassword = Users.hashPassword(req.body.Password);
-    //***.findOne({ Name: req.body.Name }) first check if a user with the name provided by the client already exists. The .findOne command is querying the ''Users'' model using Mongoose.
-    Users.findOne({ Username: req.body.Username })
-        .then((user) => {
-            if (user) {
-                //***If the given name does exist, then app send back the appropriate response to the client (name thats trying to be create already exists).
-                return res.status(400).send(req.body.Username + ' already exists');
-            } else {
-                //***If the given name that the client tries to create doesn’t exist, the Mongoose’s create command is used to CREATE the new user.
-                Users
-                    //***The create command takes an object, where each key in the object corresponds to a certain field specified in the schema (from the 'models.js' file for the User model) and each value is set to a value that is received from the request body (via req.body) sent by the client.
-                    //***The use of req.body.Name (or req.body.Password or else) allows to collect all of the information from the HTTP request body sent by the client, use Mongoose to populate a user document inside the Users collection, then add it to the database.
-                    //***Mongoose is translating here Node.js code into a MongoDB command that runs behind the scenes to insert a record into your ''Users'' collection. The application here uses Mongoose’s CREATE command on the model to execute this database operation on MongoDB automatically.
-                    .create({
-                        Username: req.body.Username,
-                        Password: hashedPassword,
-                        Email: req.body.Email,
-                        Birthday: req.body.Birthday
-                    })
-                    //***After the document is created, a callback takes the document just added as a parameter (here, this new document is given the name ''user'', but it could have been named any other name).
-                    //***Within this callback, a response is sent back to the client that contains both a status code and the document (called ''user'') that has been just created (res.status(201).json(newUser)). This gives the client feedback on his request, letting them know that it’s been completed.
-                    .then((user) => { res.status(201).json(user) })
-                    //***Error-handling function - a catch-all in case the command/request runs into an error.
-                    //***The .catch function will ''catch'' any problems that Mongoose encounters while running the create command. 
-                    .catch((error) => {
-                        console.error(error);
-                        res.status(500).send('Error: ' + error);
-                    })
-            }
-        })
-        .catch((error) => {
-            console.error(error);
-            res.status(500).send('Error: ' + error);
-        });
-});
+//***REQUEST: Allow new users to register.
+//***POST (WITH MONGOOSE): The request is equal to the 'CREATE' in the CRUD functions for systems that store data. Therefore, Express POST the data sent by the user at the endpoint '/users' and returns a JSON object containing data about the account created.
+app.post('/users', 
+///***Validation logic here for request. Dictate what is accepted or not when users create an account for important fields: username, password, and email. The validation code first ensures that the fields actually contain something (as each field is required); then, it checks that the data within follows the correct format (ex: username min lenght of 5 characters).
+    [
+        check('Username', 'Username with min. 5 characters is required').isLength({ min: 5 }),
+        check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
+        check('Password', 'Password is required').not().isEmpty(),
+        check('Email', 'Email does not appear to be valid').isEmail()
+    ], (req, res) => {
+        //***Check the validation object for errors. If an error occurs, the rest of the code will not execute, keeping the database safe from any potentially malicious code. In addition, the client is notified of the error, which will allow them to fix it and resubmit their data if it was, in fact, a harmless mistake.
+        let errors = validationResult(req);
+
+        if (!errors.isEmpty()) {
+            return res.status(422).json({ errors: errors.array() });
+        }
+
+        //***Used to hash any password entered by the user when registering before storing it in the MongoDB database.
+        let hashedPassword = Users.hashPassword(req.body.Password);
+        //***.findOne({ Name: req.body.Name }) first check if a user with the name provided by the client already exists. The .findOne command is querying the ''Users'' model using Mongoose.
+        Users.findOne({ Username: req.body.Username })
+            .then((user) => {
+                if (user) {
+                    //***If the given name does exist, then app send back the appropriate response to the client (name thats trying to be create already exists).
+                    return res.status(400).send(req.body.Username + ' already exists');
+                } else {
+                    //***If the given name that the client tries to create doesn’t exist, the Mongoose’s create command is used to CREATE the new user.
+                    Users
+                        //***The create command takes an object, where each key in the object corresponds to a certain field specified in the schema (from the 'models.js' file for the User model) and each value is set to a value that is received from the request body (via req.body) sent by the client.
+                        //***The use of req.body.Name (or req.body.Password or else) allows to collect all of the information from the HTTP request body sent by the client, use Mongoose to populate a user document inside the Users collection, then add it to the database.
+                        //***Mongoose is translating here Node.js code into a MongoDB command that runs behind the scenes to insert a record into your ''Users'' collection. The application here uses Mongoose’s CREATE command on the model to execute this database operation on MongoDB automatically.
+                        .create({
+                            Username: req.body.Username,
+                            Password: hashedPassword,
+                            Email: req.body.Email,
+                            Birthday: req.body.Birthday
+                        })
+                        //***After the document is created, a callback takes the document just added as a parameter (here, this new document is given the name ''user'', but it could have been named any other name).
+                        //***Within this callback, a response is sent back to the client that contains both a status code and the document (called ''user'') that has been just created (res.status(201).json(newUser)). This gives the client feedback on his request, letting them know that it’s been completed.
+                        .then((user) => { res.status(201).json(user) })
+                        //***Error-handling function - a catch-all in case the command/request runs into an error.
+                        //***The .catch function will ''catch'' any problems that Mongoose encounters while running the create command. 
+                        .catch((error) => {
+                            console.error(error);
+                            res.status(500).send('Error: ' + error);
+                        });
+                }
+            })
+            .catch((error) => {
+                console.error(error);
+                res.status(500).send('Error: ' + error);
+            });
+    });
 
 
 //***REQUEST: Allow users to update their user info.
 //***PUT (with MONGOOSE): The request is equal to the 'UPDATE' in the CRUD functions for systems that store data. Therefore, Express UPDATE the information of a user located at the endpoint '/users/:Userame' and returns a JSON object containing data about the user (updated version).
-app.put('/users/:Username',  passport.authenticate('jwt', {session: false}), (req, res) => {
+app.put('/users/:Username', passport.authenticate('jwt', { session: false }), (req, res) => {
     //***.findOneAndUpdate({ Name: req.body.params.Name }) searches for the user that wish to be updated in the database, via its name.
     Users.findOneAndUpdate({ Username: req.params.Username }, {
         //***$set is used to specifed which fields in the user document is to be update. The new values that are set on each of these specific fields to is extracted from the request body sent by the client.
@@ -363,7 +377,7 @@ app.put('/users/:Username',  passport.authenticate('jwt', {session: false}), (re
 
 // // ***REQUEST: Allow users to add a movie to their list of favorites.
 // // ***POST (with MONGOOSE) : The request is equal to the 'CREATE' in the CRUD functions for systems that store data (but could also have been an UPDATE). Therefore, Express POST the data sent by the user at the endpoint '/users/:Username/movies/:MovieID' and returns a confirmation message.
-app.post('/users/:Username/movies/:MovieID', passport.authenticate('jwt', {session: false}), (req, res) => {
+app.post('/users/:Username/movies/:MovieID', passport.authenticate('jwt', { session: false }), (req, res) => {
     Users.findOneAndUpdate({ Username: req.params.Username }, {
         $push: { FavoriteMovies: req.params.MovieID }
     },
@@ -384,7 +398,7 @@ app.post('/users/:Username/movies/:MovieID', passport.authenticate('jwt', {sessi
 //***REQUEST: Allow users to remove a movie from their list of favorites.
 //***DELETE (with MONGOOSE) : The request is equal to the 'DELETE' in the CRUD functions for systems that store data. Therefore, Express DELETE the data sent by the user at the endpoint '/users/:USername/movies/:MovieID' and returns a JSON object containing data about the account for which the movie has been deleted.
 //***Code exactly the same as when a client add a movieID, only this time the $pull operator is used instead of the $push operator, and the app.post is modified to app.delete.
-app.delete('/users/:Username/movies/:MovieID', passport.authenticate('jwt', {session: false}), (req, res) => {
+app.delete('/users/:Username/movies/:MovieID', passport.authenticate('jwt', { session: false }), (req, res) => {
     Users.findOneAndUpdate({ Username: req.params.Username }, {
         $pull: { FavoriteMovies: req.params.MovieID }
     },
@@ -404,7 +418,7 @@ app.delete('/users/:Username/movies/:MovieID', passport.authenticate('jwt', {ses
 
 // ***REQUEST: Allow existing users to deregister.
 // ***DELETE (with MONGOOSE) : The request is equal to the 'DELETE' in the CRUD functions for systems that store data. Therefore, Express DELETE the data sent by the user at the endpoint '/users/:Username' and returns a message.
-app.delete('/users/:Username', passport.authenticate('jwt', {session: false}), (req, res) => {
+app.delete('/users/:Username', passport.authenticate('jwt', { session: false }), (req, res) => {
     Users.findOneAndRemove({ Username: req.params.Username })
         .then((user) => {
             if (!user) {
