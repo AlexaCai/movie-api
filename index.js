@@ -435,7 +435,7 @@ app.delete('/users/:Username', passport.authenticate('jwt', { session: false }),
 
 
 // ***Express GET route located at the endpoint '/' and that returns a string default message.
-app.get('/', (req, res) => {
+app.get('/pure-escarpment-93921', (req, res) => {
     res.send('Welcome to your new movie e-friend advisor!');
 });
 
