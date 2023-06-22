@@ -3,7 +3,7 @@ const express = require('express');
 // ***Used to declare a variable that encapsulates Express’s functionality to configure the web server. This new variable is what will be use to route HTTP requests and responses.
 const app = express();
 
-// ***Used to import CORs module (). This code specifies that the app (defined upper by ''const app = express();'') uses CORS.
+// ***Used to import CORs module (). This code specifies that the app (defined upper by const app = express();) uses CORS.
 //***CORs allows to control which domains have access to the API’s server. By controlling who has access to the API, its possible to keep it protected from malicious entities. 
 const cors = require('cors');
 //***Code below, related to CORs, makes sure only certain origins are given access to the app. The above code creates a list of allowed domains within the variable ''allowedOrigins'', then compares the domains of any incoming request with this list and either allows it (if the domain is on the list) or returns an error (if the domain isn’t on the list).
