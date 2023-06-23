@@ -297,8 +297,8 @@ app.get('/movies/directors/:directorName', passport.authenticate('jwt', { sessio
 
 //***REQUEST: Allow new users to register.
 //***POST (WITH MONGOOSE): The request is equal to the 'CREATE' in the CRUD functions for systems that store data. Therefore, Express POST the data sent by the user at the endpoint '/users' and returns a JSON object containing data about the account created.
-app.post('/users', 
-///***Validation logic here for request. Dictate what is accepted or not when users create an account for important fields: username, password, and email. The validation code first ensures that the fields actually contain something (as each field is required); then, it checks that the data within follows the correct format (ex: username min lenght of 5 characters).
+app.post('/users',
+    ///***Validation logic here for request. Dictate what is accepted or not when users create an account for important fields: username, password, and email. The validation code first ensures that the fields actually contain something (as each field is required); then, it checks that the data within follows the correct format (ex: username min lenght of 5 characters).
     [
         check('Username', 'Username with min. 5 characters is required').isLength({ min: 5 }),
         check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
@@ -352,38 +352,47 @@ app.post('/users',
 
 //***REQUEST: Allow users to update their user info.
 //***PUT (with MONGOOSE): The request is equal to the 'UPDATE' in the CRUD functions for systems that store data. Therefore, Express UPDATE the information of a user located at the endpoint '/users/:Userame' and returns a JSON object containing data about the user (updated version).
-app.put('/users/:Username', passport.authenticate('jwt', { session: false }), (req, res) => {
-    //***.findOneAndUpdate({ Name: req.body.params.Name }) searches for the user that wish to be updated in the database, via its name.
-    Users.findOneAndUpdate({ Username: req.params.Username }, 
-        [
-            check('Username', 'Username with min. 5 characters is required').isLength({ min: 5 }),
-            check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
-            check('Password', 'Password is required').not().isEmpty(),
-            check('Email', 'Email does not appear to be valid').isEmail()
-        ],
-        {
-        //***$set is used to specifed which fields in the user document is to be update. The new values that are set on each of these specific fields to is extracted from the request body sent by the client.
-        $set:
-        {
-            Username: req.body.Username,
-            Password: req.body.Password,
-            Email: req.body.Email,
-            Birthday: req.body.Birthday
+app.put('/users/:Username', passport.authenticate('jwt', { session: false }),
+    [
+        check('Username', 'Username with min. 5 characters is required').isLength({ min: 5 }),
+        check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
+        check('Password', 'Password is required').not().isEmpty(),
+        check('Email', 'Email does not appear to be valid').isEmail()
+    ], (req, res) => {
+        //***Check the validation object for errors. If an error occurs, the rest of the code will not execute, keeping the database safe from any potentially malicious code. In addition, the client is notified of the error, which will allow them to fix it and resubmit their data if it was, in fact, a harmless mistake.
+        let errors = validationResult(req);
+
+        if (!errors.isEmpty()) {
+            return res.status(422).json({ errors: errors.array() });
         }
-    },
-        //***{ new: true } specifies that, in the proceeding callback, the document that was just updated is the one to be returned.
-        { new: true }
-    )
-        //***Answer to the client if the update worked ('updatedUser' being the newly updated data/document of the user).
-        .then((updatedUser) => {
-            res.json(updatedUser);
-        })
-        //***Error-handling function at the end to catch any errors that may occur.
-        .catch((err) => {
-            console.error(err);
-            res.status(500).send('Error: ' + err);
-        })
-});
+
+        //***Used to hash any password entered by the user when registering before storing it in the MongoDB database.
+        let hashedPassword = Users.hashPassword(req.body.Password);
+        //***.findOneAndUpdate({ Name: req.body.params.Name }) searches for the user that wish to be updated in the database, via its name.
+        Users.findOneAndUpdate({ Username: req.params.Username },
+            {
+                //***$set is used to specifed which fields in the user document is to be update. The new values that are set on each of these specific fields to is extracted from the request body sent by the client.
+                $set:
+                {
+                    Username: req.body.Username,
+                    Password: hashedPassword,
+                    Email: req.body.Email,
+                    Birthday: req.body.Birthday
+                }
+            },
+            //***{ new: true } specifies that, in the proceeding callback, the document that was just updated is the one to be returned.
+            { new: true }
+        )
+            //***Answer to the client if the update worked ('updatedUser' being the newly updated data/document of the user).
+            .then((updatedUser) => {
+                res.json(updatedUser);
+            })
+            //***Error-handling function at the end to catch any errors that may occur.
+            .catch((err) => {
+                console.error(err);
+                res.status(500).send('Error: ' + err);
+            })
+    });
 
 
 // // ***REQUEST: Allow users to add a movie to their list of favorites.
@@ -467,7 +476,7 @@ app.use((err, req, res, next) => {
 
 
 // ***Used to set up the server to listen to for requests on port 8080 (to local/internal computer).
-app.listen(8080, () => {console.log('Your app is listening on port 8080.');}); 
+app.listen(8080, () => { console.log('Your app is listening on port 8080.'); });
 // ***Every time an HTTP request hits the server, Node will deal with the request, using the request argument as the request sent to the server and the response argument as the response the server returns. In order to do this, Node needs to be listening for a request, which is what the listen method on the server object is doing. In most cases, all is needed to pass to 'listen' is the port number we want the server to listen on (which, in this case, is 8080 for local/internal request on the same computer).
 //***Since external poeple will be use this app, it's necessary to allow the port to change if necessary. This is done by way of ''process.env.PORT'', which looks for a pre-configured port number in the environment variable, and, if nothing is found, sets the port to a certain port number.
 // const port = process.env.PORT || 8080;
