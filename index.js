@@ -459,9 +459,8 @@ app.use((err, req, res, next) => {
 // ***Every time an HTTP request hits the server, Node will deal with the request, using the request argument as the request sent to the server and the response argument as the response the server returns. In order to do this, Node needs to be listening for a request, which is what the listen method on the server object is doing. In most cases, all is needed to pass to 'listen' is the port number we want the server to listen on (which, in this case, is 8080 for local/internal request on the same computer).
 //***Since external poeple will be use this app, it's necessary to allow the port to change if necessary. This is done by way of ''process.env.PORT'', which looks for a pre-configured port number in the environment variable, and, if nothing is found, sets the port to a certain port number.
 const port = process.env.PORT || 8080;
-app.listen(port,  () => {
-    console.log("Listening on port " + port);
+app.listen(port, '0.0.0.0',() => {
+ console.log('Listening on Port ' + port);
 });
-
 
 //***Test
