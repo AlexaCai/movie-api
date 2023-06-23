@@ -54,8 +54,12 @@ const Models = require('./models.js');
 const Movies = Models.Movie;
 const Users = Models.User;
 
-//*** Allows Mongoose to connect to the database (see /cfDB in the path) so it can perform CRUD operations on the documents it contains from within the REST API.
-mongoose.connect('mongodb://127.0.0.1:27017/cfDB', { useNewUrlParser: true, useUnifiedTopology: true });
+//***mongoose.connect('mongodb://127.0.0.1:27017/cfDB', { useNewUrlParser:... allows Mongoose to connect to the database (see /cfDB in the path) so it can perform CRUD operations on the documents it contains from within the REST API. However, this command is only good to connect on the local host/computer.
+// mongoose.connect('mongodb://127.0.0.1:27017/cfDB', { useNewUrlParser: true, useUnifiedTopology: true });
+//***Since the database is located online, the mongoose.connect command upper needs to be changed and be directed, instead, to the new MongoDB Atlas database (command line below). However if this new ''mongoose.connect'' is pushed to GitHub, the connection URI will be exposed to whoever views the repository. This means that anyone could use the database and manipulate the data there because all the necessary credentials are included in the connection URI below (ex: password). To avoid this problem, we use the environment variables.
+// mongoose.connect('mongodb+srv://movieAPIadmin:Hawaii2016@cluster1-movie-api.esafywf.mongodb.net/myFlixDB?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true });
+//***Connection link with environment variable below. With the ''mongoose.connect'' below, the connection URI will never be exposed in the “index.js” file pushed on Github (much more secure).
+mongoose.connect( process.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 
 
 // ***App users
