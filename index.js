@@ -352,7 +352,14 @@ app.post('/users',
 
 //***REQUEST: Allow users to update their user info.
 //***PUT (with MONGOOSE): The request is equal to the 'UPDATE' in the CRUD functions for systems that store data. Therefore, Express UPDATE the information of a user located at the endpoint '/users/:Userame' and returns a JSON object containing data about the user (updated version).
-app.put('/users/:Username', passport.authenticate('jwt', { session: false }), (req, res) => {
+app.put('/users/:Username', 
+[
+    check('Username', 'Username with min. 5 characters is required').isLength({ min: 5 }),
+    check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
+    check('Password', 'Password is required').not().isEmpty(),
+    check('Email', 'Email does not appear to be valid').isEmail()
+],
+passport.authenticate('jwt', { session: false }), (req, res) => {
     //***.findOneAndUpdate({ Name: req.body.params.Name }) searches for the user that wish to be updated in the database, via its name.
     Users.findOneAndUpdate({ Username: req.params.Username }, {
         //***$set is used to specifed which fields in the user document is to be update. The new values that are set on each of these specific fields to is extracted from the request body sent by the client.
