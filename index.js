@@ -55,7 +55,7 @@ const Movies = Models.Movie;
 const Users = Models.User;
 
 //*** Allows Mongoose to connect to the database (see /cfDB in the path) so it can perform CRUD operations on the documents it contains from within the REST API.
-mongoose.connect('mongodb://127.0.0.1:51546/cfDB', { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 
 
 // ***App users
