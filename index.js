@@ -355,12 +355,6 @@ app.post('/users',
 app.put('/users/:Username', passport.authenticate('jwt', { session: false }), (req, res) => {
     //***.findOneAndUpdate({ Name: req.body.params.Name }) searches for the user that wish to be updated in the database, via its name.
     Users.findOneAndUpdate({ Username: req.params.Username }, 
-        [
-            check('Username', 'Username with min. 5 characters is required').isLength({ min: 5 }),
-            check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
-            check('Password', 'Password is required').not().isEmpty(),
-            check('Email', 'Email does not appear to be valid').isEmail()
-        ],
         {
         //***$set is used to specifed which fields in the user document is to be update. The new values that are set on each of these specific fields to is extracted from the request body sent by the client.
         $set:
