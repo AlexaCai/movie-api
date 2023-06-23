@@ -7,7 +7,7 @@ const app = express();
 //***CORs allows to control which domains have access to the API’s server. By controlling who has access to the API, its possible to keep it protected from malicious entities. 
 const cors = require('cors');
 //***Code below, related to CORs, makes sure only certain origins are given access to the app. The above code creates a list of allowed domains within the variable ''allowedOrigins'', then compares the domains of any incoming request with this list and either allows it (if the domain is on the list) or returns an error (if the domain isn’t on the list).
-let allowedOrigins = ['http://localhost:8080', 'http://testsite.com'];
+let allowedOrigins = ['*'];
 
 app.use(cors({
     origin: (origin, callback) => {
