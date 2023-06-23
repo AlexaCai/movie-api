@@ -353,6 +353,7 @@ app.post('/users',
 //***REQUEST: Allow users to update their user info.
 //***PUT (with MONGOOSE): The request is equal to the 'UPDATE' in the CRUD functions for systems that store data. Therefore, Express UPDATE the information of a user located at the endpoint '/users/:Userame' and returns a JSON object containing data about the user (updated version).
 app.put('/users/:Username', passport.authenticate('jwt', { session: false }),
+    //***Validation logic here for update request. Dictate what is accepted or not when users update an account for important fields: username, password, and email. The validation code first ensures that the fields actually contain something (as each field is required); then, it checks that the data within follows the correct format (ex: username min lenght of 5 characters).
     [
         check('Username', 'Username with min. 5 characters is required').isLength({ min: 5 }),
         check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
