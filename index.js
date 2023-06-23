@@ -55,7 +55,7 @@ const Movies = Models.Movie;
 const Users = Models.User;
 
 //*** Allows Mongoose to connect to the database (see /cfDB in the path) so it can perform CRUD operations on the documents it contains from within the REST API.
-mongoose.connect('mongodb://127.0.0.1:27017/cfDB', { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect('mongodb://127.0.0.1:51546/cfDB', { useNewUrlParser: true, useUnifiedTopology: true });
 
 
 // ***App users
@@ -458,7 +458,7 @@ app.use((err, req, res, next) => {
 // ***app.listen(8080, () => {console.log('Your app is listening on port 8080.');}); is used to set up the server to listen to for requests on port 8080 (to local/internal computer).
 // ***Every time an HTTP request hits the server, Node will deal with the request, using the request argument as the request sent to the server and the response argument as the response the server returns. In order to do this, Node needs to be listening for a request, which is what the listen method on the server object is doing. In most cases, all is needed to pass to 'listen' is the port number we want the server to listen on (which, in this case, is 8080 for local/internal request on the same computer).
 //***Since external poeple will be use this app, it's necessary to allow the port to change if necessary. This is done by way of ''process.env.PORT'', which looks for a pre-configured port number in the environment variable, and, if nothing is found, sets the port to a certain port number.
-const port = process.env.PORT || 27017;
+const port = process.env.PORT || 51546;
 app.listen(port, '0.0.0.0',() => {
  console.log('Listening on Port ' + port);
 });
