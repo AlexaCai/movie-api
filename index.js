@@ -55,11 +55,11 @@ const Movies = Models.Movie;
 const Users = Models.User;
 
 //***mongoose.connect('mongodb://127.0.0.1:27017/cfDB', { useNewUrlParser:... allows Mongoose to connect to the database (see /cfDB in the path) so it can perform CRUD operations on the documents it contains from within the REST API. However, this command is only good to connect on the local host/computer.
-// mongoose.connect('mongodb://127.0.0.1:27017/cfDB', { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect('mongodb://127.0.0.1:27017/cfDB', { useNewUrlParser: true, useUnifiedTopology: true });
 //***Since the database is located online, the mongoose.connect command upper needs to be changed and be directed, instead, to the new MongoDB Atlas database (command line below). However if this new ''mongoose.connect'' is pushed to GitHub, the connection URI will be exposed to whoever views the repository. This means that anyone could use the database and manipulate the data there because all the necessary credentials are included in the connection URI below (ex: password). To avoid this problem, we use the environment variables.
 // mongoose.connect('mongodb+srv://movieAPIadmin:Hawaii2016@cluster1-movie-api.esafywf.mongodb.net/myFlixDB?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true });
 //***Connection link with environment variable below. With the ''mongoose.connect'' below, the connection URI will never be exposed in the “index.js” file pushed on Github (much more secure).
-mongoose.connect( process.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+// mongoose.connect( process.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 
 
 // ***App users
@@ -465,10 +465,11 @@ app.use((err, req, res, next) => {
 });
 
 
-// ***app.listen(8080, () => {console.log('Your app is listening on port 8080.');}); is used to set up the server to listen to for requests on port 8080 (to local/internal computer).
+// ***Used to set up the server to listen to for requests on port 8080 (to local/internal computer).
+app.listen(8080, () => {console.log('Your app is listening on port 8080.');}); 
 // ***Every time an HTTP request hits the server, Node will deal with the request, using the request argument as the request sent to the server and the response argument as the response the server returns. In order to do this, Node needs to be listening for a request, which is what the listen method on the server object is doing. In most cases, all is needed to pass to 'listen' is the port number we want the server to listen on (which, in this case, is 8080 for local/internal request on the same computer).
 //***Since external poeple will be use this app, it's necessary to allow the port to change if necessary. This is done by way of ''process.env.PORT'', which looks for a pre-configured port number in the environment variable, and, if nothing is found, sets the port to a certain port number.
-const port = process.env.PORT || 8080;
-app.listen(port, '0.0.0.0',() => {
- console.log('Listening on Port ' + port);
-});
+// const port = process.env.PORT || 8080;
+// app.listen(port, '0.0.0.0',() => {
+//  console.log('Listening on Port ' + port);
+// });
