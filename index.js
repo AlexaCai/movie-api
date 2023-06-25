@@ -452,7 +452,7 @@ app.delete('/users/:Username', passport.authenticate('jwt', { session: false }),
 });
 
 
-// ***Express GET route located at the endpoint '/' and that returns a string default message.
+// ***Express GET route located at the endpoint '/' returns a string default message. It's the root directory.
 app.get('/', (req, res) => {
     res.send('Welcome to your new movie e-friend advisor!');
 });
