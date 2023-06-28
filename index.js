@@ -58,8 +58,7 @@ const Users = Models.User;
 //***Since the database is located online, the mongoose.connect command upper needs to be changed and be directed, instead, to the new MongoDB Atlas database (command line below). However if this new ''mongoose.connect'' is pushed to GitHub, the connection URI will be exposed to whoever views the repository (this means that anyone could use the database and manipulate the data there because all the necessary credentials are included in the connection URI below (ex: password). To avoid this problem, the environment variables are needed.
 // mongoose.connect('mongodb+srv://movieAPIadmin:(password-used)@cluster1-movie-api.esafywf.mongodb.net/myFlixDB?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true });
 //***Connection link with environment variable. With the ''mongoose.connect'' below, the connection URI will never be exposed in the ''index.js'' file pushed on Github (more secure as some information such as the password dont appear).
-const uri = process.env.CONNECTION_URI;
-mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(process.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 
 
 // ***REQUEST: Return a list of all movies.
