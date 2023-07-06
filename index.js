@@ -6,7 +6,7 @@ const app = express();
 //***Used to import CORs module (). This code specifies that the app (defined upper by const ''app = express();'') uses CORS. CORs allows to control which domains have access to the API’s server (and so, to keep it protected from malicious entities). 
 const cors = require('cors');
 //***Code below, related to CORs, makes sure only certain origins are given access to the app. ''let allowedOrigins = [abc, def] creates a list of allowed domains, then compares the domains of any incoming request with this list and either allows it (if the domain is on the list) or returns an error (if the domain isn’t on the list). The * in ''let allowedOrigins = ['*'];'' means that all domains are allowed to make requests to the API.
-let allowedOrigins = ['*'];
+let allowedOrigins = ['http://localhost:8080', 'http://testsite.com', 'http://localhost:1234'];
 
 app.use(cors({
     origin: (origin, callback) => {
