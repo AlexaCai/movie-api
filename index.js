@@ -64,7 +64,7 @@ mongoose.connect(process.env.CONNECTION_URI, { useNewUrlParser: true, useUnified
 // ***REQUEST: Return a list of all movies.
 // ***READ (with MONGOOSE) : The request is equal to the 'READ' in the CRUD functions for systems that store data. Therefore, Express GET route located at the endpoint '/movies' and returns a JSON object containing data about the movies list, allowing the user to GET/READ the info.
 //***passport.authenticate('jwt', { session: false }), is a parameter of the GET request that makes sure any request to the ''/movies'' endpoint will require a JWT from the client. The JWT will be decoded and checked by the JWT authentication strategy created earlier using Passport, which will authenticate the request.
-app.get('/movies', passport.authenticate('jwt', { session: false }), (req, res) => {
+app.get('/movies', (req, res) => {
     //***The .find() function in Mongoose grabs data in the database of all the movies, since no specific movie was specified in the request.
     Movies.find()
         //***After the document is created, a response is sent back to the client with the movies data (document) that was just read/requested. The parameter for this callback, which is named ''movies'' here refers, by default, to the documents (each movie = one document) that were just read.
