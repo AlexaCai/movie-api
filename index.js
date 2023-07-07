@@ -45,22 +45,6 @@ const morgan = require('morgan');
 // ***The ''common'' parameter specifies that requests should be logged using Morgan’s ''common'' format, which logs basic data such as IP address, the time of the request, the request method and path, as well as the status code that was sent back as a response. 
 app.use(morgan('common'));
 
-function formatDirectorBirthDate(req, res, next) {
-    if (req.movie && req.movie.Director && req.movie.Director.Birth) {
-        const directorBirth = new Date(req.movie.Director.Birth);
-        const formattedBirthDate = directorBirth.toLocaleDateString('en-US', {
-            year: '2-digit',
-            month: '2-digit',
-            day: '2-digit',
-        });
-        req.movie.Director.Birth = formattedBirthDate;
-    }
-    next();
-}
-
-// Apply the middleware to all movie-related endpoints
-app.use(['/movies', '/movies/:Title', '/movies/genre/:genreName', '/movies/directors/:directorName'], formatDirectorBirthDate);
-
 // ***Used to import the Mongoose module and the ''models.js'' file.
 const mongoose = require('mongoose');
 const Models = require('./models.js');
