@@ -120,11 +120,23 @@ app.get('/movies/:Title', (req, res) => {
 
 // ***REQUEST: Return data about a genre by name.
 // ***READ (with MONGOOSE): The request is equal to the 'READ' in the CRUD functions for systems that store data. Therefore, Express GET route located at the endpoint '/movies/genres/genreName' and returns a JSON object containing data about the genre requested, allowing the user to GET/READ the info.
-app.get('/movies/genre/:genreName', (req, res) => {
+app.get('/movies/genre/:genreName', passport.authenticate('jwt', { session: false }), (req, res) => {
     //***The .findOne({ 'Genre.Name': req.params.genreName }) function in Mongoose grabs data in the database on the specified Genre from the request. 
     Movies.find({ 'Genre.Name': req.params.genreName })
+    .lean()
         //***After the document is created, a response is sent back to the client with the Genre data that was just read/requested. The parameter for this callback, which is named ''genre'' here refers, by default, to the document that was just read.
         .then((genre) => {
+            genre.forEach((movie) => {
+                if (movie.Director && movie.Director.Birth) {
+                    const directorBirth = new Date(movie.Director.Birth);
+                    const formattedBirthDate = directorBirth.toLocaleDateString('en-US', {
+                        year: '2-digit',
+                        month: '2-digit',
+                        day: '2-digit',
+                    });
+                    movie.Director.Birth = formattedBirthDate;
+                }
+            });
             res.json(genre);
         })
         //***Error-handling function at the end to catch any errors that may occur.
@@ -137,7 +149,7 @@ app.get('/movies/genre/:genreName', (req, res) => {
 
 // ***REQUEST: Return data about a director by name.
 // ***READ (with MONGOOSE): The request is equal to the 'READ' in the CRUD functions for systems that store data. Therefore, Express GET route located at the endpoint '/movies/directors/:directorName' and returns a JSON object containing data about the director requested, allowing the user to GET/READ the info.
-app.get('/movies/directors/:directorName', (req, res) => {
+app.get('/movies/directors/:directorName', passport.authenticate('jwt', { session: false }), (req, res) => {
     //***The .findOne({ 'Director.Name': req.params.directorName }) function in Mongoose grabs data in the database on the specified Director from the request. 
     Movies.find({ 'Director.Name': req.params.directorName })
         //***After the document is created, a response is sent back to the client with the director data that was just read/requested. The parameter for this callback, which is named ''director'' here refers, by default, to the document that was just read.
