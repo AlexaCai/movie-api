@@ -99,7 +99,7 @@ app.get('/movies/:Title', (req, res) => {
     .lean()
         //***After the document is created, a response is sent back to the client with the movie data (document) that was just read/requested. The parameter for this callback, which is named ''movie'' here refers, by default, to the document that was just read.
         .then((movie) => {
-            movies.forEach((movie) => {
+            movie.forEach((movie) => {
                 if (movie.Director && movie.Director.Birth) {
                     const directorBirth = new Date(movie.Director.Birth);
                     const formattedBirthDate = directorBirth.toLocaleDateString('en-US', {
