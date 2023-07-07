@@ -71,6 +71,7 @@ app.get('/movies', (req, res) => {
         .lean()
         //***After data is retrieved, a response is sent back to the client with the movies data (document) that was just read/requested. The parameter for this callback, which is named ''movies'' here refers, by default, to the documents (each movie = one document) that were just read.
         .then((movies) => {
+            //***All the codes below, up until ''});'' just before ''res.status(201).json(movies);'' is used to format the director's birth date in MM/DD/YY. These lines of code are not necessary to make the endpoint works and could be removed if the birth date format would like to be removed.
             movies.forEach((movie) => {
                 if (movie.Director && movie.Director.Birth) {
                     const directorBirth = new Date(movie.Director.Birth);
@@ -94,13 +95,14 @@ app.get('/movies', (req, res) => {
 
 // ***REQUEST: Return data about a single movie by title .
 // ***READ (WITH MONGOOSE) : The request is equal to the 'READ' in the CRUD functions for systems that store data. Therefore, Express GET route located at the endpoint '/movies/:title' and returns a JSON object containing data about the movies requested, allowing the user to GET/READ the info.
-app.get('/movies/:Title', (req, res) => {
+app.get('/movies/:Title', passport.authenticate('jwt', { session: false }), (req, res) => {
     //***The .findOne({ Title: req.params.Title }) function in Mongoose grabs data in the database on the specified Title from the request. 
     Movies.findOne({ Title: req.params.Title })
         //***The .lean() function in Mongoose is used to convert the retrieved data from MongoDB into plain JavaScript objects. By default, when using Mongoose queries like find(), the returned data are Mongoose Documents, which have additional functionality and methods attached to them. Using .lean() ensures that the retrieved data documents are in plain JavaScript object format instead of Mongoose Documents, which is necessary to perform the following actions to format the director's birth date. .lean() is only used to format director's birth data, otherwise it wouldnt be necessary. 
         .lean()
         //***After data is retrieved, a response is sent back to the client with the movie data (document) that was just read/requested. The parameter for this callback, which is named ''movie'' here refers, by default, to the document that was just read.
         .then((movie) => {
+            //***All the codes below, up until ''});'' just before ''res.json(movies);'' is used to format the director's birth date in MM/DD/YY. These lines of code are not necessary to make the endpoint works and could be removed if the birth date format would like to be removed.
             if (movie && movie.Director && movie.Director.Birth) {
                 const directorBirth = new Date(movie.Director.Birth);
                 const formattedBirthDate = directorBirth.toLocaleDateString('en-US', {
@@ -122,7 +124,7 @@ app.get('/movies/:Title', (req, res) => {
 
 // ***REQUEST: Return data about a genre by name.
 // ***READ (with MONGOOSE): The request is equal to the 'READ' in the CRUD functions for systems that store data. Therefore, Express GET route located at the endpoint '/movies/genres/genreName' and returns a JSON object containing data about the genre requested, allowing the user to GET/READ the info.
-app.get('/movies/genre/:genreName', (req, res) => {
+app.get('/movies/genre/:genreName', passport.authenticate('jwt', { session: false }), (req, res) => {
     //***The .findOne({ 'Genre.Name': req.params.genreName }) function in Mongoose grabs data in the database on the specified Genre from the request. 
     Movies.find({ 'Genre.Name': req.params.genreName })
         //***The .lean() function in Mongoose is used to convert the retrieved data from MongoDB into plain JavaScript objects. By default, when using Mongoose queries like find(), the returned data are Mongoose Documents, which have additional functionality and methods attached to them. Using .lean() ensures that the retrieved data documents are in plain JavaScript object format instead of Mongoose Documents, which is necessary to perform the following actions to format the director's birth date. .lean() is only used to format director's birth data, otherwise it wouldnt be necessary. 
@@ -130,6 +132,7 @@ app.get('/movies/genre/:genreName', (req, res) => {
         //***After data is retrieved, a response is sent back to the client with the Genre data that was just read/requested. The parameter for this callback, which is named ''genre'' here refers, by default, to the document that was just read.
         .then((genre) => {
             genre.forEach((movie) => {
+                //***All the codes below, up until ''});'' just before ''res.json(genre);'' is used to format the director's birth date in MM/DD/YY. These lines of code are not necessary to make the endpoint works and could be removed if the birth date format would like to be removed.
                 if (movie.Director && movie.Director.Birth) {
                     const directorBirth = new Date(movie.Director.Birth);
                     const formattedBirthDate = directorBirth.toLocaleDateString('en-US', {
@@ -152,7 +155,7 @@ app.get('/movies/genre/:genreName', (req, res) => {
 
 // ***REQUEST: Return data about a director by name.
 // ***READ (with MONGOOSE): The request is equal to the 'READ' in the CRUD functions for systems that store data. Therefore, Express GET route located at the endpoint '/movies/directors/:directorName' and returns a JSON object containing data about the director requested, allowing the user to GET/READ the info.
-app.get('/movies/directors/:directorName', (req, res) => {
+app.get('/movies/directors/:directorName', passport.authenticate('jwt', { session: false }), (req, res) => {
     //***The .findOne({ 'Director.Name': req.params.directorName }) function in Mongoose grabs data in the database on the specified Director from the request. 
     Movies.find({ 'Director.Name': req.params.directorName })
         //***The .lean() function in Mongoose is used to convert the retrieved data from MongoDB into plain JavaScript objects. By default, when using Mongoose queries like find(), the returned data are Mongoose Documents, which have additional functionality and methods attached to them. Using .lean() ensures that the retrieved data documents are in plain JavaScript object format instead of Mongoose Documents, which is necessary to perform the following actions to format the director's birth date. .lean() is only used to format director's birth data, otherwise it wouldnt be necessary. 
@@ -160,6 +163,7 @@ app.get('/movies/directors/:directorName', (req, res) => {
         //***After data is retrieved, a response is sent back to the client with the director data that was just read/requested. The parameter for this callback, which is named ''director'' here refers, by default, to the document that was just read.
         .then((director) => {
             director.forEach((movie) => {
+                //***All the codes below, up until ''});'' just before ''res.json(director);'' is used to format the director's birth date in MM/DD/YY. These lines of code are not necessary to make the endpoint works and could be removed if the birth date format would like to be removed.
                 if (movie.Director && movie.Director.Birth) {
                     const directorBirth = new Date(movie.Director.Birth);
                     const formattedBirthDate = directorBirth.toLocaleDateString('en-US', {
