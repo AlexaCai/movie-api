@@ -102,7 +102,7 @@ app.get('/movies/:Title', passport.authenticate('jwt', { session: false }), (req
         .lean()
         //***After data is retrieved, a response is sent back to the client with the movie data (document) that was just read/requested. The parameter for this callback, which is named ''movie'' here refers, by default, to the document that was just read.
         .then((movie) => {
-            //***All the codes below, up until ''});'' just before ''res.json(movies);'' is used to format the director's birth date in MM/DD/YY. These lines of code are not necessary to make the endpoint works and could be removed if the birth date format would like to be removed.
+            //***All the codes below, up until ''});'' just before ''res.json(movie);'' is used to format the director's birth date in MM/DD/YY. These lines of code are not necessary to make the endpoint works and could be removed if the birth date format would like to be removed.
             if (movie && movie.Director && movie.Director.Birth) {
                 const directorBirth = new Date(movie.Director.Birth);
                 const formattedBirthDate = directorBirth.toLocaleDateString('en-US', {
