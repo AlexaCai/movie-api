@@ -67,16 +67,19 @@ mongoose.connect(process.env.CONNECTION_URI, { useNewUrlParser: true, useUnified
 app.get('/movies', (req, res) => {
     //***The .find() function in Mongoose grabs data in the database of all the movies, since no specific movie was specified in the request.
     Movies.find()
+    .lean()
         //***After the document is created, a response is sent back to the client with the movies data (document) that was just read/requested. The parameter for this callback, which is named ''movies'' here refers, by default, to the documents (each movie = one document) that were just read.
         .then((movies) => {
             movies.forEach((movie) => {
-                const directorBirth = new Date(movie.Director.Birth);
-                const formattedBirthDate = directorBirth.toLocaleDateString('en-US', {
-                    year: '2-digit',
-                    month: '2-digit',
-                    day: '2-digit',
-                });
-                movie.Director.Birth = formattedBirthDate;
+                if (movie.Director && movie.Director.Birth) {
+                    const directorBirth = new Date(movie.Director.Birth);
+                    const formattedBirthDate = directorBirth.toLocaleDateString('en-US', {
+                        year: '2-digit',
+                        month: '2-digit',
+                        day: '2-digit',
+                    });
+                    movie.Director.Birth = formattedBirthDate;
+                }
             });
             res.status(201).json(movies);
         })
