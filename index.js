@@ -45,18 +45,21 @@ const morgan = require('morgan');
 // ***The ''common'' parameter specifies that requests should be logged using Morgan’s ''common'' format, which logs basic data such as IP address, the time of the request, the request method and path, as well as the status code that was sent back as a response. 
 app.use(morgan('common'));
 
-function formatDirectorBirthDate(movie) {
-    if (movie && movie.Director && movie.Director.Birth) {
-        const directorBirth = new Date(movie.Director.Birth);
+function formatDirectorBirthDate(req, res, next) {
+    if (req.movie && req.movie.Director && req.movie.Director.Birth) {
+        const directorBirth = new Date(req.movie.Director.Birth);
         const formattedBirthDate = directorBirth.toLocaleDateString('en-US', {
             year: '2-digit',
             month: '2-digit',
             day: '2-digit',
         });
-        movie.Director.Birth = formattedBirthDate;
+        req.movie.Director.Birth = formattedBirthDate;
     }
-    return movie;
+    next();
 }
+
+// Apply the middleware to all movie-related endpoints
+app.use(['/movies', '/movies/:Title', '/movies/genre/:genreName', '/movies/directors/:directorName'], formatDirectorBirthDate);
 
 // ***Used to import the Mongoose module and the ''models.js'' file.
 const mongoose = require('mongoose');
@@ -80,10 +83,21 @@ mongoose.connect(process.env.CONNECTION_URI, { useNewUrlParser: true, useUnified
 app.get('/movies', (req, res) => {
     //***The .find() function in Mongoose grabs data in the database of all the movies, since no specific movie was specified in the request.
     Movies.find()
+    .lean()
         //***After the document is created, a response is sent back to the client with the movies data (document) that was just read/requested. The parameter for this callback, which is named ''movies'' here refers, by default, to the documents (each movie = one document) that were just read.
         .then((movies) => {
-            const formattedMovies = movies.map((movie) => formatDirectorBirthDate(movie));
-            res.status(201).json(formattedMovies);
+            movies.forEach((movie) => {
+                if (movie.Director && movie.Director.Birth) {
+                    const directorBirth = new Date(movie.Director.Birth);
+                    const formattedBirthDate = directorBirth.toLocaleDateString('en-US', {
+                        year: '2-digit',
+                        month: '2-digit',
+                        day: '2-digit',
+                    });
+                    movie.Director.Birth = formattedBirthDate;
+                }
+            });
+            res.status(201).json(movies);
         })
         //***Error-handling function at the end to catch any errors that may occur.
         .catch((err) => {
