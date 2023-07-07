@@ -16,17 +16,7 @@ let movieSchema = mongoose.Schema({
     Director: {
       Name: String,
       Bio: String,
-      Birth: {
-        type: Date,
-        get: function() {
-            const birthDate = this.Director.Birth;
-            return birthDate.toLocaleDateString('en-US', {
-                year: '2-digit',
-                month: '2-digit',
-                day: '2-digit'
-            });
-        }
-    },
+      Birth: Date,
       Death: Date
     },
     ImagePath: String,
