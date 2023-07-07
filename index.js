@@ -67,14 +67,16 @@ mongoose.connect(process.env.CONNECTION_URI, { useNewUrlParser: true, useUnified
 app.get('/movies', (req, res) => {
     //***The .find() function in Mongoose grabs data in the database of all the movies, since no specific movie was specified in the request.
     Movies.find()
+        //***The .lean() function in Mongoose is used to convert the retrieved data from MongoDB into plain JavaScript objects. By default, when using Mongoose queries like find(), the returned data are Mongoose Documents, which have additional functionality and methods attached to them. Using .lean() ensures that the retrieved data documents are in plain JavaScript object format instead of Mongoose Documents, which is necessary to perform the following actions to format the director's birth date. .lean() is only used to format director's birth data, otherwise it wouldnt be necessary. 
         .lean()
-        //***After the document is created, a response is sent back to the client with the movies data (document) that was just read/requested. The parameter for this callback, which is named ''movies'' here refers, by default, to the documents (each movie = one document) that were just read.
+        //***After data is retrieved, a response is sent back to the client with the movies data (document) that was just read/requested. The parameter for this callback, which is named ''movies'' here refers, by default, to the documents (each movie = one document) that were just read.
         .then((movies) => {
+            //***The following lines of codes, up until ''});'' just before ''res.status(201).json(movies);'' are used to format the director's birth date displayed to YY/MM/DD format. It possible to removed these lines and the endpoints will still work, but the date won't be formatted this way.
             movies.forEach((movie) => {
                 if (movie.Director && movie.Director.Birth) {
                     const directorBirth = new Date(movie.Director.Birth);
                     const formattedBirthDate = directorBirth.toLocaleDateString('en-US', {
-                        year: '2-digit',
+                        year: '4-digit',
                         month: '2-digit',
                         day: '2-digit',
                     });
@@ -102,7 +104,7 @@ app.get('/movies/:Title', (req, res) => {
             if (movie && movie.Director && movie.Director.Birth) {
                 const directorBirth = new Date(movie.Director.Birth);
                 const formattedBirthDate = directorBirth.toLocaleDateString('en-US', {
-                    year: '2-digit',
+                    year: '4-digit',
                     month: '2-digit',
                     day: '2-digit',
                 });
@@ -130,7 +132,7 @@ app.get('/movies/genre/:genreName', (req, res) => {
                 if (movie.Director && movie.Director.Birth) {
                     const directorBirth = new Date(movie.Director.Birth);
                     const formattedBirthDate = directorBirth.toLocaleDateString('en-US', {
-                        year: '2-digit',
+                        year: '4-digit',
                         month: '2-digit',
                         day: '2-digit',
                     });
@@ -159,7 +161,7 @@ app.get('/movies/directors/:directorName', (req, res) => {
                 if (movie.Director && movie.Director.Birth) {
                     const directorBirth = new Date(movie.Director.Birth);
                     const formattedBirthDate = directorBirth.toLocaleDateString('en-US', {
-                        year: '2-digit',
+                        year: '4-digit',
                         month: '2-digit',
                         day: '2-digit',
                     });
