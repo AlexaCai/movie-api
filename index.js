@@ -93,7 +93,7 @@ app.get('/movies', (req, res) => {
 
 // ***REQUEST: Return data about a single movie by title .
 // ***READ (WITH MONGOOSE) : The request is equal to the 'READ' in the CRUD functions for systems that store data. Therefore, Express GET route located at the endpoint '/movies/:title' and returns a JSON object containing data about the movies requested, allowing the user to GET/READ the info.
-app.get('/movies/:Title', passport.authenticate('jwt', { session: false }), (req, res) => {
+app.get('/movies/:Title', (req, res) => {
     //***The .findOne({ Title: req.params.Title }) function in Mongoose grabs data in the database on the specified Title from the request. 
     Movies.findOne({ Title: req.params.Title })
         //***After the document is created, a response is sent back to the client with the movie data (document) that was just read/requested. The parameter for this callback, which is named ''movie'' here refers, by default, to the document that was just read.
