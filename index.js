@@ -96,8 +96,20 @@ app.get('/movies', (req, res) => {
 app.get('/movies/:Title', (req, res) => {
     //***The .findOne({ Title: req.params.Title }) function in Mongoose grabs data in the database on the specified Title from the request. 
     Movies.findOne({ Title: req.params.Title })
+    .lean()
         //***After the document is created, a response is sent back to the client with the movie data (document) that was just read/requested. The parameter for this callback, which is named ''movie'' here refers, by default, to the document that was just read.
         .then((movie) => {
+            movies.forEach((movie) => {
+                if (movie.Director && movie.Director.Birth) {
+                    const directorBirth = new Date(movie.Director.Birth);
+                    const formattedBirthDate = directorBirth.toLocaleDateString('en-US', {
+                        year: '2-digit',
+                        month: '2-digit',
+                        day: '2-digit',
+                    });
+                    movie.Director.Birth = formattedBirthDate;
+                }
+            });
             res.json(movie);
         })
         //***Error-handling function at the end to catch any errors that may occur.
