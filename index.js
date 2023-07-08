@@ -64,7 +64,7 @@ mongoose.connect(process.env.CONNECTION_URI, { useNewUrlParser: true, useUnified
 // ***REQUEST: Return a list of all movies.
 // ***READ (with MONGOOSE) : The request is equal to the 'READ' in the CRUD functions for systems that store data. Therefore, Express GET route located at the endpoint '/movies' and returns a JSON object containing data about the movies list, allowing the user to GET/READ the info.
 //***passport.authenticate('jwt', { session: false }), is a parameter of the GET request that makes sure any request to the ''/movies'' endpoint will require a JWT from the client. The JWT will be decoded and checked by the JWT authentication strategy created earlier using Passport, which will authenticate the request.
-app.get('/movies', (req, res) => {
+app.get('/movies', passport.authenticate('jwt', { session: false }), (req, res) => {
     //***The .find() function in Mongoose grabs data in the database of all the movies, since no specific movie was specified in the request.
     Movies.find()
         //***The .lean() function in Mongoose is used to convert the retrieved data from MongoDB into plain JavaScript objects. By default, when using Mongoose queries like find(), the returned data are Mongoose Documents, which have additional functionality and methods attached to them. Using .lean() ensures that the retrieved data documents are in plain JavaScript object format instead of Mongoose Documents, which is necessary to perform the following actions to format the director's birth date. .lean() is only used to format director's birth data, otherwise it wouldnt be necessary. 
@@ -95,7 +95,7 @@ app.get('/movies', (req, res) => {
 
 // ***REQUEST: Return data about a single movie by title .
 // ***READ (WITH MONGOOSE) : The request is equal to the 'READ' in the CRUD functions for systems that store data. Therefore, Express GET route located at the endpoint '/movies/:title' and returns a JSON object containing data about the movies requested, allowing the user to GET/READ the info.
-app.get('/movies/:Title', (req, res) => {
+app.get('/movies/:Title', passport.authenticate('jwt', { session: false }), (req, res) => {
     //***The .findOne({ Title: req.params.Title }) function in Mongoose grabs data in the database on the specified Title from the request. 
     Movies.findOne({ Title: req.params.Title })
         //***The .lean() function in Mongoose is used to convert the retrieved data from MongoDB into plain JavaScript objects. By default, when using Mongoose queries like find(), the returned data are Mongoose Documents, which have additional functionality and methods attached to them. Using .lean() ensures that the retrieved data documents are in plain JavaScript object format instead of Mongoose Documents, which is necessary to perform the following actions to format the director's birth date. .lean() is only used to format director's birth data, otherwise it wouldnt be necessary. 
