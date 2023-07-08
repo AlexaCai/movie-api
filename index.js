@@ -34,18 +34,18 @@ const passport = require('passport');
 //***Used to import the ''passport.js'' file (which contains code for users logging authentication).
 require('./passport');
 
-// ***Used to import Uuid module.
+//***Used to import Uuid module.
 const uuid = require('uuid');
 
 //***Used to import Express-validator module (JavaScript libraries used to add validation -to protect against some attacks- to a Node.js/Express application.
 const { check, validationResult } = require('express-validator');
 
-// ***Used to import Morgan (preexisting library as a logging middleware, equipped to log any and all useful information about a request).
+//***Used to import Morgan (preexisting library as a logging middleware, equipped to log any and all useful information about a request).
 const morgan = require('morgan');
-// ***The ''common'' parameter specifies that requests should be logged using Morgan’s ''common'' format, which logs basic data such as IP address, the time of the request, the request method and path, as well as the status code that was sent back as a response. 
+//***The ''common'' parameter specifies that requests should be logged using Morgan’s ''common'' format, which logs basic data such as IP address, the time of the request, the request method and path, as well as the status code that was sent back as a response. 
 app.use(morgan('common'));
 
-// ***Used to import the Mongoose module and the ''models.js'' file.
+//***Used to import the Mongoose module and the ''models.js'' file.
 const mongoose = require('mongoose');
 const Models = require('./models.js');
 
