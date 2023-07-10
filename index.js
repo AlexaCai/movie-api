@@ -207,7 +207,7 @@ app.post('/users',
             .then((user) => {
                 if (user) {
                     //***If the given name does exist, the app send back the appropriate response to the client (name thats trying to be create already exists).
-                    return res.status(400).send(req.body.Username + ' already exists');
+                    return res.status(409).send(req.body.Username + ' already exists');
                 } else {
                     //***If the given name doesn’t exist, the Mongoose’s create command is used to CREATE the new user.
                     Users
