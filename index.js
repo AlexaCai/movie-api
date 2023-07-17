@@ -252,23 +252,31 @@ app.put('/users/:Username', passport.authenticate('jwt', { session: false }),
         if (!errors.isEmpty()) {
             return res.status(422).json({ errors: errors.array() });
         }
-
+        //***This is a search query. It searches for a user in the database with the provided Username value in the request body (req.body.Username). 
         Users.findOne({ Username: req.body.Username })
+            //***If the query finds a matching user with the same username (existingUsernameUser), the following lines are executed.
             .then((existingUsernameUser) => {
+                //***If the username already exist in the database, this line responds with a status code of 409 (conflict) and a JSON object containing an error message indicating that the username already exists.
                 if (existingUsernameUser) {
                     return res.status(409).json({ error: 'Username already exists' });
+                    //***If the new username the user wants to update is not found in the database, the following lines are executed.
                 } else {
                     // Check if the new email already exists
-                    Users.findOne({ Email: req.body.Email})
+                    Users.findOne({ Email: req.body.Email })
+                        //***If the query finds a matching email with the same username (existingEmailUser), the following lines are executed.
                         .then((existingEmailUser) => {
+                            //***If the email already exist in the database, this line responds with a status code of 409 (conflict) and a JSON object containing an error message indicating that the email already exists.
                             if (existingEmailUser) {
                                 return res.status(409).json({ error: 'Email already exists' });
+                                //***If the new email the user wants to update is not found in the database, the following lines are executed.
                             } else {
-                                //***Used to hash any password entered by the user when updating before storing it in the MongoDB database.
+                                //***Used to hash any password entered by the user when updating before storing it in the MongoDB database. This is done to securely store the password in the database.
                                 let hashedPassword = Users.hashPassword(req.body.Password);
-
+                                //***This is a MongoDB query using Mongoose. It searches for a user with the given username (req.params.Username) and updates his information based on the values provided in the request body.
                                 Users.findOneAndUpdate(
+                                    //***First argument of the findOneAndUpdate. Searches for a user with the Username field matching the value provided in the route parameter req.params.Username.
                                     { Username: req.params.Username },
+                                    //***Second argument of the findOneAndUpdate method, which is an update object. The $set operator is used to specify the fields to be updated and their new values. Here it sets the Username, Password, Email, and Birthday fields with the new values provided in the request body.
                                     {
                                         $set: {
                                             Username: req.body.Username,
@@ -277,11 +285,14 @@ app.put('/users/:Username', passport.authenticate('jwt', { session: false }),
                                             Birthday: req.body.Birthday,
                                         },
                                     },
+                                    //***new option, when set to true, tells MongoDB to return the updated document instead of the original document.
                                     { new: true }
                                 )
+                                    //***If the update is successful, this block is executed. It responds to the client with a JSON object containing the updated user information.
                                     .then((updatedUser) => {
                                         res.json(updatedUser);
                                     })
+                                    //***If there is any error during the update process, this block is executed. It logs the error and responds with a status code of 500 and an error message.
                                     .catch((err) => {
                                         console.error(err);
                                         res.status(500).send('Error: ' + err);
