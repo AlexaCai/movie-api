@@ -246,61 +246,6 @@ app.put('/users/:Username', passport.authenticate('jwt', { session: false }),
         check('Password', 'Password is required').not().isEmpty(),
         check('Email', 'Email does not appear to be valid').isEmail()
     ], (req, res) => {
-
-        Users.findOne({ Username: req.body.Username }, (err, existingUsernameUser) => {
-            if (err) {
-              console.error(err);
-              return res.status(500).send('Error: ' + err);
-            }
-        
-        Users.findOne({ Email: req.body.Email }, (err, existingEmailUser) => {
-              if (err) {
-                console.error(err);
-                return res.status(500).send('Error: ' + err);
-              }
-        
-              // Check if the new username is already taken
-              if (existingUsernameUser && existingUsernameUser.Username !== req.params.Username) {
-                return res.status(422).json('Username already exists');
-              }
-        
-              // Check if the new email is already taken
-              if (existingEmailUser && existingEmailUser.Username !== req.params.Username) {
-                return res.status(422).json('Email already exists' );
-              }
-              if (
-                existingUsernameUser && existingUsernameUser.Username !== req.params.Username &&
-                existingEmailUser && existingEmailUser.Username !== req.params.Username
-              ) {
-                return res.status(422).json({ error: 'Both Username and Email are already taken' });
-              }
-        
-              // Continue with the update if the new username and email are unique
-              let hashedPassword = Users.hashPassword(req.body.Password);
-        
-              Users.findOneAndUpdate(
-                { Username: req.params.Username },
-                {
-                  $set: {
-                    Username: req.body.Username,
-                    Password: hashedPassword,
-                    Email: req.body.Email,
-                    Birthday: req.body.Birthday,
-                  },
-                },
-                { new: true }
-              )
-                .then((updatedUser) => {
-                  res.json(updatedUser);
-                })
-                .catch((err) => {
-                  console.error(err);
-                  res.status(500).send('Error: ' + err);
-                });
-            });
-          });
-        });
-
         //***Check the validation object for errors. If an error occurs, the rest of the code will not execute, keeping the database safe from any potentially malicious code. In addition, the client is notified of the error, which will allow them to fix it and resubmit their data if it was a harmless mistake.
         let errors = validationResult(req);
 
@@ -333,6 +278,7 @@ app.put('/users/:Username', passport.authenticate('jwt', { session: false }),
                 console.error(err);
                 res.status(500).send('Error: ' + err);
             })
+    });
 
 
 // // ***REQUEST: Allow users to add a movie to their list of favorites.
