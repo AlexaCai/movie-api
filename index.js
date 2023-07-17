@@ -252,33 +252,81 @@ app.put('/users/:Username', passport.authenticate('jwt', { session: false }),
         if (!errors.isEmpty()) {
             return res.status(422).json({ errors: errors.array() });
         }
-        //***Used to hash any password entered by the user when updating before storing it in the MongoDB database.
-        let hashedPassword = Users.hashPassword(req.body.Password);
-        //***.findOneAndUpdate({ Username: req.params.Username }) searches for the user that wish to be updated in the database, via its name, and update it based on the info sent on his request.
-        Users.findOneAndUpdate({ Username: req.params.Username },
-            {
-                //***$set is used to specifed which fields in the user document is to be update. The new values that are set on each of these specific fields are extracted from the request body sent by the client.
-                $set:
-                {
-                    Username: req.body.Username,
-                    Password: hashedPassword,
-                    Email: req.body.Email,
-                    Birthday: req.body.Birthday
+        Users.findOne({ Username: req.body.Username, _id: { $ne: req.user._id } })
+            .then((existingUsernameUser) => {
+                if (existingUsernameUser) {
+                    return res.status(409).json({ error: 'Username already exists' });
+                } else {
+                    // Check if the new email already exists
+                    Users.findOne({ Email: req.body.Email, _id: { $ne: req.user._id } })
+                        .then((existingEmailUser) => {
+                            if (existingEmailUser) {
+                                return res.status(409).json({ error: 'Email already exists' });
+                            } else {
+                                // Continue with the update if the new username and email are unique
+                                let hashedPassword = Users.hashPassword(req.body.Password);
+
+                                Users.findOneAndUpdate(
+                                    { Username: req.params.Username },
+                                    {
+                                        $set: {
+                                            Username: req.body.Username,
+                                            Password: hashedPassword,
+                                            Email: req.body.Email,
+                                            Birthday: req.body.Birthday,
+                                        },
+                                    },
+                                    { new: true }
+                                )
+                                    .then((updatedUser) => {
+                                        res.json(updatedUser);
+                                    })
+                                    .catch((err) => {
+                                        console.error(err);
+                                        res.status(500).send('Error: ' + err);
+                                    });
+                            }
+                        })
+                        .catch((err) => {
+                            console.error(err);
+                            res.status(500).send('Error: ' + err);
+                        });
                 }
-            },
-            //***{ new: true } specifies that in the proceeding callback, the document that was just updated is the one to be returned.
-            { new: true }
-        )
-            //***Answer to the client if the update worked ('updatedUser' being the newly updated data/document of the user).
-            .then((updatedUser) => {
-                res.json(updatedUser);
             })
-            //***Error-handling function at the end to catch any errors that may occur.
             .catch((err) => {
                 console.error(err);
                 res.status(500).send('Error: ' + err);
-            })
+            });
     });
+
+//     //***Used to hash any password entered by the user when updating before storing it in the MongoDB database.
+//     let hashedPassword = Users.hashPassword(req.body.Password);
+//     //***.findOneAndUpdate({ Username: req.params.Username }) searches for the user that wish to be updated in the database, via its name, and update it based on the info sent on his request.
+//     Users.findOneAndUpdate({ Username: req.params.Username },
+
+//         {
+//             //***$set is used to specifed which fields in the user document is to be update. The new values that are set on each of these specific fields are extracted from the request body sent by the client.
+//             $set:
+//             {
+//                 Username: req.body.Username,
+//                 Password: hashedPassword,
+//                 Email: req.body.Email,
+//                 Birthday: req.body.Birthday
+//             }
+//         },
+//         //***{ new: true } specifies that in the proceeding callback, the document that was just updated is the one to be returned.
+//         { new: true }
+//     )
+//         //***Answer to the client if the update worked ('updatedUser' being the newly updated data/document of the user).
+//         .then((updatedUser) => {
+//             res.json(updatedUser);
+//         })
+//         //***Error-handling function at the end to catch any errors that may occur.
+//         .catch((err) => {
+//             console.error(err);
+//             res.status(500).send('Error: ' + err);
+//         })
+// });
 
 
 // // ***REQUEST: Allow users to add a movie to their list of favorites.
