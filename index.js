@@ -215,7 +215,7 @@ app.post('/users',
                             if (existingEmailUser) {
                                 //***errorMessage variable encapsulates the email with the error message. Then, it is wraped up inside an object with the property "error", then JSON.stringify is used to convert the object to a JSON string and send it as the response. By using JSON.stringify explicitly, the email and the error message will be send as plain text.
                                 const errorMessage = req.body.Email + ' already exists, please choose another email';
-                                return res.status(409).sendStatus(409).send(errorMessage);
+                                return res.status(409).send(errorMessage);
                                 //***If the new email the user wants to update is not found in the database, the following lines are executed.
                             } else {
                                 //***Used to hash any password entered by the user when updating before storing it in the MongoDB database. This is done to securely store the password in the database.
