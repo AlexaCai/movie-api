@@ -200,8 +200,6 @@ app.post('/users',
         if (!errors.isEmpty()) {
             return res.status(422).json({ errors: errors.array() });
         }
-        //***Used to hash any password entered by the user when registering before storing it in the MongoDB database.
-        let hashedPassword = Users.hashPassword(req.body.Password);
         //***.findOne({ Username: req.body.Username }) first check if a user with the name provided by the new user already exists.
         Users.findOne({ Username: req.body.Username })
             .then((user) => {
@@ -209,29 +207,47 @@ app.post('/users',
                     //***If the given name does exist, the app send back the appropriate response to the client (name thats trying to be create already exists).
                     return res.status(409).send(req.body.Username + ' already exists');
                 } else {
-                    //***If the given name doesn’t exist, the Mongoose’s create command is used to CREATE the new user.
-                    Users
-                        //***The create command takes an object, where each key in the object corresponds to a certain field specified in the schema (from the 'models.js' file for the ''User'' model) and each value is set to a value that is received from the request body (via req.body) sent by the client.
-                        //***The use of req.body.Username (or req.body.Password or else) allows to collect all of the information from the HTTP request body sent by the client, use Mongoose to populate the user document inside the ''Users'' collection, then add it to the database.
-                        .create({
-                            Username: req.body.Username,
-                            Password: hashedPassword,
-                            Email: req.body.Email,
-                            Birthday: req.body.Birthday
+                    // Check if the new email already exists in the database. ''_id: { $ne: req.user._id }'' means that we want to find documents where the _id field is not equal to the current user's ID (req.user._id). This condition ensures that the query will return documents that do not match the current user's ID (so it will exclude the current user's document from the search results).
+                    Users.findOne({ Email: req.body.Email, _id: { $ne: req.user._id } })
+                        //***If the query finds a matching email with the same username (existingEmailUser), the following lines are executed.
+                        .then((existingEmailUser) => {
+                            //***If the email already exist in the database, this line responds with a status code of 409 (conflict) and a JSON object containing an error message indicating that the email already exists.
+                            if (existingEmailUser) {
+                                return res.status(409).json({ error: 'Email already exists' });
+                                //***If the new email the user wants to update is not found in the database, the following lines are executed.
+                            } else {
+                                //***Used to hash any password entered by the user when updating before storing it in the MongoDB database. This is done to securely store the password in the database.
+                                let hashedPassword = Users.hashPassword(req.body.Password);
+                                //***If the given name doesn’t exist, the Mongoose’s create command is used to CREATE the new user.
+                                Users
+                                    //***The create command takes an object, where each key in the object corresponds to a certain field specified in the schema (from the 'models.js' file for the ''User'' model) and each value is set to a value that is received from the request body (via req.body) sent by the client.
+                                    //***The use of req.body.Username (or req.body.Password or else) allows to collect all of the information from the HTTP request body sent by the client, use Mongoose to populate the user document inside the ''Users'' collection, then add it to the database.
+                                    .create({
+                                        Username: req.body.Username,
+                                        Password: hashedPassword,
+                                        Email: req.body.Email,
+                                        Birthday: req.body.Birthday
+                                    })
+                                    //***After the document is created, a callback takes the document just added as a parameter (here, this new document is given the name ''user'').
+                                    //***Within this callback, a response is sent back to the client that contains both a status code and the document (called ''user'') that has been just created (res.status(201).json(newUser)). This gives the client feedback on his request, letting them know that it’s been completed.
+                                    .then((user) => { res.status(201).json(user) })
+                                    //***Error-handling function at the end to catch any errors that may occur.
+                                    //***If there is any error during the update process, this block is executed. It logs the error and responds with a status code of 500 and an error message.
+                                    .catch((err) => {
+                                        console.error(err);
+                                        res.status(500).send('Error: ' + err);
+                                    });
+                            }
                         })
-                        //***After the document is created, a callback takes the document just added as a parameter (here, this new document is given the name ''user'').
-                        //***Within this callback, a response is sent back to the client that contains both a status code and the document (called ''user'') that has been just created (res.status(201).json(newUser)). This gives the client feedback on his request, letting them know that it’s been completed.
-                        .then((user) => { res.status(201).json(user) })
-                        //***Error-handling function at the end to catch any errors that may occur.
-                        .catch((error) => {
-                            console.error(error);
-                            res.status(500).send('Error: ' + error);
+                        .catch((err) => {
+                            console.error(err);
+                            res.status(500).send('Error: ' + err);
                         });
                 }
             })
-            .catch((error) => {
-                console.error(error);
-                res.status(500).send('Error: ' + error);
+            .catch((err) => {
+                console.error(err);
+                res.status(500).send('Error: ' + err);
             });
     });
 
