@@ -200,20 +200,20 @@ app.post('/users',
         if (!errors.isEmpty()) {
             return res.status(422).json({ errors: errors.array() });
         }
-        //***.findOne({ Username: req.body.Username }) first check if a user with the name provided by the new user already exists.
+        //***.findOne({ Username: req.body.Username }) first check if a user with the username provided by the new user already exists in the database.
         Users.findOne({ Username: req.body.Username })
             .then((user) => {
                 if (user) {
-                    //***If the given name does exist, the app send back the appropriate response to the client (name thats trying to be create already exists).
-                    return res.status(409).send(req.body.Username + ' already exists');
+                    //***If the given username does exist, the app send back the appropriate response to the client (name thats trying to be create already exists).
+                    return res.status(409).send(req.body.Username + ' already exists, please choose another username');
                 } else {
-                    // Check if the new email already exists in the database. ''_id: { $ne: req.user._id }'' means that we want to find documents where the _id field is not equal to the current user's ID (req.user._id). This condition ensures that the query will return documents that do not match the current user's ID (so it will exclude the current user's document from the search results).
+                    //***.findOne({ Email: req.body.Email }) check if a user with the email provided by the new user already exists in the database.
                     Users.findOne({ Email: req.body.Email })
                         //***If the query finds a matching email with the same username (existingEmailUser), the following lines are executed.
                         .then((existingEmailUser) => {
                             //***If the email already exist in the database, this line responds with a status code of 409 (conflict) and a JSON object containing an error message indicating that the email already exists.
                             if (existingEmailUser) {
-                                return res.status(409).json(req.body.Email+ 'Email already exists');
+                                return res.status(409).json(req.body.Email + ' already exists, please choose another email');
                                 //***If the new email the user wants to update is not found in the database, the following lines are executed.
                             } else {
                                 //***Used to hash any password entered by the user when updating before storing it in the MongoDB database. This is done to securely store the password in the database.
