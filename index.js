@@ -213,7 +213,9 @@ app.post('/users',
                         .then((existingEmailUser) => {
                             //***If the email already exist in the database, this line responds with a status code of 409 (conflict) and a JSON object containing an error message indicating that the email already exists.
                             if (existingEmailUser) {
-                                return res.status(409).json(req.body.Email + ' already exists, please choose another email');
+                                //***errorMessage variable encapsulates the email with the error message. Then, it is wraped up inside an object with the property "error", then JSON.stringify is used to convert the object to a JSON string and send it as the response. By using JSON.stringify explicitly, the email and the error message will be send as plain text.
+                                const errorMessage = req.body.Email + ' already exists, please choose another email';
+                                return res.status(409).send(JSON.stringify({ error: errorMessage }));                                
                                 //***If the new email the user wants to update is not found in the database, the following lines are executed.
                             } else {
                                 //***Used to hash any password entered by the user when updating before storing it in the MongoDB database. This is done to securely store the password in the database.
