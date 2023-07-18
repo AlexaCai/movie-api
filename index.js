@@ -252,8 +252,8 @@ app.put('/users/:Username', passport.authenticate('jwt', { session: false }),
         if (!errors.isEmpty()) {
             return res.status(422).json({ errors: errors.array() });
         }
-        //***This is a search query. It searches for a user in the database with the provided Username value in the request body (req.body.Username). 
-        Users.findOne({ Username: req.body.Username })
+        // Check if the new username already exists in the database. ''_id: { $ne: req.user._id }'' means that we want to find documents where the _id field is not equal to the current user's ID (req.user._id). This condition ensures that the query will return documents that do not match the current user's ID (so it will exclude the current user's document from the search results).
+        Users.findOne({ Username: req.body.Username, _id: { $ne: req.user._id } })
             //***If the query finds a matching user with the same username (existingUsernameUser), the following lines are executed.
             .then((existingUsernameUser) => {
                 //***If the username already exist in the database, this line responds with a status code of 409 (conflict) and a JSON object containing an error message indicating that the username already exists.
@@ -261,8 +261,8 @@ app.put('/users/:Username', passport.authenticate('jwt', { session: false }),
                     return res.status(409).json({ error: 'Username already exists' });
                     //***If the new username the user wants to update is not found in the database, the following lines are executed.
                 } else {
-                    // Check if the new email already exists
-                    Users.findOne({ Email: req.body.Email })
+                    // Check if the new email already exists in the database. ''_id: { $ne: req.user._id }'' means that we want to find documents where the _id field is not equal to the current user's ID (req.user._id). This condition ensures that the query will return documents that do not match the current user's ID (so it will exclude the current user's document from the search results).
+                    Users.findOne({ Email: req.body.Email, _id: { $ne: req.user._id } })
                         //***If the query finds a matching email with the same username (existingEmailUser), the following lines are executed.
                         .then((existingEmailUser) => {
                             //***If the email already exist in the database, this line responds with a status code of 409 (conflict) and a JSON object containing an error message indicating that the email already exists.
