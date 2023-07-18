@@ -1,6 +1,6 @@
-// ***Used to import Express module.
+//***Used to import Express module.
 const express = require('express');
-// ***Used to declare a variable that encapsulates Express’s functionality to configure the web server. This new variable is what will be use to route HTTP requests and responses.
+//***Used to declare a variable that encapsulates Express’s functionality to configure the web server. This new variable is what will be use to route HTTP requests and responses.
 const app = express();
 
 //***Used to import CORs module (). This code specifies that the app (defined upper by const ''app = express();'') uses CORS. CORs allows to control which domains have access to the API’s server (and so, to keep it protected from malicious entities). 
@@ -19,9 +19,9 @@ app.use(cors({
     }
 }));
 
-// ***Used to import Body-parser module.
+//***Used to import Body-parser module.
 const bodyParser = require('body-parser')
-// Used as the application of the body-parser as middleware into the app.
+//***Used as the application of the body-parser as middleware into the app.
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -49,7 +49,7 @@ app.use(morgan('common'));
 const mongoose = require('mongoose');
 const Models = require('./models.js');
 
-// ***These lines require the Mongoose models defined in the ''models.js'' file, so they can be used in this file. ''Models.Movie'' and ''Models.User'' refer to the model names defined in the ''models.js'' file. Once the models are imported into ''index.js'' file, the API endpoints can make use of them in order to query the MongoDB database according to the schemas defined in ''models.js''.
+//***These lines require the Mongoose models defined in the ''models.js'' file, so they can be used in this file. ''Models.Movie'' and ''Models.User'' refer to the model names defined in the ''models.js'' file. Once the models are imported into ''index.js'' file, the API endpoints can make use of them in order to query the MongoDB database according to the schemas defined in ''models.js''.
 const Movies = Models.Movie;
 const Users = Models.User;
 
@@ -61,8 +61,8 @@ const Users = Models.User;
 mongoose.connect(process.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 
 
-// ***REQUEST: Return a list of all movies.
-// ***READ (with MONGOOSE) : The request is equal to the 'READ' in the CRUD functions for systems that store data. Therefore, Express GET route located at the endpoint '/movies' and returns a JSON object containing data about the movies list, allowing the user to GET/READ the info.
+//***REQUEST: Return a list of all movies.
+//***READ (with MONGOOSE) : The request is equal to the 'READ' in the CRUD functions for systems that store data. Therefore, Express GET route located at the endpoint '/movies' and returns a JSON object containing data about the movies list, allowing the user to GET/READ the info.
 //***passport.authenticate('jwt', { session: false }), is a parameter of the GET request that makes sure any request to the ''/movies'' endpoint will require a JWT from the client. The JWT will be decoded and checked by the JWT authentication strategy created earlier using Passport, which will authenticate the request.
 app.get('/movies', passport.authenticate('jwt', { session: false }), (req, res) => {
     //***The .find() function in Mongoose grabs data in the database of all the movies, since no specific movie was specified in the request.
@@ -93,8 +93,8 @@ app.get('/movies', passport.authenticate('jwt', { session: false }), (req, res) 
 });
 
 
-// ***REQUEST: Return data about a single movie by title .
-// ***READ (WITH MONGOOSE) : The request is equal to the 'READ' in the CRUD functions for systems that store data. Therefore, Express GET route located at the endpoint '/movies/:title' and returns a JSON object containing data about the movies requested, allowing the user to GET/READ the info.
+//***REQUEST: Return data about a single movie by title .
+//***READ (WITH MONGOOSE) : The request is equal to the 'READ' in the CRUD functions for systems that store data. Therefore, Express GET route located at the endpoint '/movies/:title' and returns a JSON object containing data about the movies requested, allowing the user to GET/READ the info.
 app.get('/movies/:Title', passport.authenticate('jwt', { session: false }), (req, res) => {
     //***The .findOne({ Title: req.params.Title }) function in Mongoose grabs data in the database on the specified Title from the request. 
     Movies.findOne({ Title: req.params.Title })
@@ -122,8 +122,8 @@ app.get('/movies/:Title', passport.authenticate('jwt', { session: false }), (req
 });
 
 
-// ***REQUEST: Return data about a genre by name.
-// ***READ (with MONGOOSE): The request is equal to the 'READ' in the CRUD functions for systems that store data. Therefore, Express GET route located at the endpoint '/movies/genres/genreName' and returns a JSON object containing data about the genre requested, allowing the user to GET/READ the info.
+//***REQUEST: Return data about a genre by name.
+//***READ (with MONGOOSE): The request is equal to the 'READ' in the CRUD functions for systems that store data. Therefore, Express GET route located at the endpoint '/movies/genres/genreName' and returns a JSON object containing data about the genre requested, allowing the user to GET/READ the info.
 app.get('/movies/genre/:genreName', passport.authenticate('jwt', { session: false }), (req, res) => {
     //***The .findOne({ 'Genre.Name': req.params.genreName }) function in Mongoose grabs data in the database on the specified Genre from the request. 
     Movies.find({ 'Genre.Name': req.params.genreName })
@@ -153,8 +153,8 @@ app.get('/movies/genre/:genreName', passport.authenticate('jwt', { session: fals
 });
 
 
-// ***REQUEST: Return data about a director by name.
-// ***READ (with MONGOOSE): The request is equal to the 'READ' in the CRUD functions for systems that store data. Therefore, Express GET route located at the endpoint '/movies/directors/:directorName' and returns a JSON object containing data about the director requested, allowing the user to GET/READ the info.
+//***REQUEST: Return data about a director by name.
+//***READ (with MONGOOSE): The request is equal to the 'READ' in the CRUD functions for systems that store data. Therefore, Express GET route located at the endpoint '/movies/directors/:directorName' and returns a JSON object containing data about the director requested, allowing the user to GET/READ the info.
 app.get('/movies/directors/:directorName', passport.authenticate('jwt', { session: false }), (req, res) => {
     //***The .findOne({ 'Director.Name': req.params.directorName }) function in Mongoose grabs data in the database on the specified Director from the request. 
     Movies.find({ 'Director.Name': req.params.directorName })
@@ -328,8 +328,8 @@ app.put('/users/:Username', passport.authenticate('jwt', { session: false }),
     });
 
 
-// // ***REQUEST: Allow users to add a movie to their list of favorites.
-// // ***POST (with MONGOOSE) : The request is equal to the 'CREATE' in the CRUD functions for systems that store data (but could also have been an UPDATE). Therefore, Express POST the data sent by the user at the endpoint '/users/:Username/movies/:MovieID' and returns a confirmation message.
+//***REQUEST: Allow users to add a movie to their list of favorites.
+//***POST (with MONGOOSE) : The request is equal to the 'CREATE' in the CRUD functions for systems that store data (but could also have been an UPDATE). Therefore, Express POST the data sent by the user at the endpoint '/users/:Username/movies/:MovieID' and returns a confirmation message.
 app.post('/users/:Username/movies/:MovieID', passport.authenticate('jwt', { session: false }), (req, res) => {
     //***.findOneAndUpdate({ Username: req.params.USername }) searches for the user that wish to update his favorite movies in the database, via its name, and update his favorite movies based on the info sent on his request.
     Users.findOneAndUpdate({ Username: req.params.Username }, {
@@ -371,8 +371,8 @@ app.delete('/users/:Username/movies/:MovieID', passport.authenticate('jwt', { se
 });
 
 
-// ***REQUEST: Allow existing users to deregister.
-// ***DELETE (with MONGOOSE) : The request is equal to the 'DELETE' in the CRUD functions for systems that store data. Therefore, Express DELETE the data sent by the user at the endpoint '/users/:Username' and returns a message.
+//***REQUEST: Allow existing users to deregister.
+//***DELETE (with MONGOOSE) : The request is equal to the 'DELETE' in the CRUD functions for systems that store data. Therefore, Express DELETE the data sent by the user at the endpoint '/users/:Username' and returns a message.
 app.delete('/users/:Username', passport.authenticate('jwt', { session: false }), (req, res) => {
     Users.findOneAndRemove({ Username: req.params.Username })
         .then((user) => {
@@ -389,21 +389,21 @@ app.delete('/users/:Username', passport.authenticate('jwt', { session: false }),
 });
 
 
-// ***Express GET route located at the endpoint '/' returns a string default message. It's the root directory.
+//***Express GET route located at the endpoint '/' returns a string default message. It's the root directory.
 app.get('/', (req, res) => {
     res.send('Welcome to your new movie e-friend advisor!');
 });
 
 
-// ***app.use(express.static('public')); is used to serve the ''documentation.html'' file from the public folder.
-// ***This function automatically routes all requests for static files to their corresponding files within a certain folder on the server (in this case, the '"public"' folder inside the parent folder ''movie_api''). 
-// ***With this function in place, if someone requests the ''documentation.html'' file, Express would automatically route that request to send back a response with the ''public/documentation.html'' file.
+//***app.use(express.static('public')); is used to serve the ''documentation.html'' file from the public folder.
+//***This function automatically routes all requests for static files to their corresponding files within a certain folder on the server (in this case, the '"public"' folder inside the parent folder ''movie_api''). 
+//***With this function in place, if someone requests the ''documentation.html'' file, Express would automatically route that request to send back a response with the ''public/documentation.html'' file.
 app.use(express.static('public'));
 
 
-// ***This code would execute every time an error occurs in the code. Information about the current error would be logged to the terminal using err.stack, which is a property of the error parameter for the middleware function. 
-// ***Error-handling middleware should always be defined last in a chain of middleware, after all other instances of app.use() and route calls (after app.get(), app.post(), etc.) but before app.listen().
-// ***The first of parameters ('err') allows to receive information about whatever unexpected error brought to the current handler.
+//***This code would execute every time an error occurs in the code. Information about the current error would be logged to the terminal using err.stack, which is a property of the error parameter for the middleware function. 
+//***Error-handling middleware should always be defined last in a chain of middleware, after all other instances of app.use() and route calls (after app.get(), app.post(), etc.) but before app.listen().
+//***The first of parameters ('err') allows to receive information about whatever unexpected error brought to the current handler.
 app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(500).send('Something broke!');
@@ -411,7 +411,7 @@ app.use((err, req, res, next) => {
 
 
 //***Used to set up the server to listen to for requests on port 8080 (to local/internal computer).
-// app.listen(8080, () => { console.log('Your app is listening on port 8080.'); });
+//***app.listen(8080, () => { console.log('Your app is listening on port 8080.'); });
 //***Since external poeple will be using the app however, it's necessary to allow the port to change if necessary. This is done by ''process.env.PORT'', which looks for a pre-configured port number in the environment variable, and, if nothing is found, sets the port to a certain port number.
 const port = process.env.PORT || 8080;
 app.listen(port, '0.0.0.0', () => {
