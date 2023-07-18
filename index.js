@@ -274,7 +274,7 @@ app.put('/users/:Username', passport.authenticate('jwt', { session: false }),
             .then((existingUsernameUser) => {
                 //***If the username already exist in the database, this line responds with a status code of 409 (conflict) and a JSON object containing an error message indicating that the username already exists.
                 if (existingUsernameUser) {
-                    return res.status(409).json(req.body.Username + 'Username already exists' );
+                    return res.status(409).json(req.body.Username + ' already exists, please choose another username' );
                     //***If the new username the user wants to update is not found in the database, the following lines are executed.
                 } else {
                     // Check if the new email already exists in the database. ''_id: { $ne: req.user._id }'' means that we want to find documents where the _id field is not equal to the current user's ID (req.user._id). This condition ensures that the query will return documents that do not match the current user's ID (so it will exclude the current user's document from the search results).
@@ -283,7 +283,7 @@ app.put('/users/:Username', passport.authenticate('jwt', { session: false }),
                         .then((existingEmailUser) => {
                             //***If the email already exist in the database, this line responds with a status code of 409 (conflict) and a JSON object containing an error message indicating that the email already exists.
                             if (existingEmailUser) {
-                                return res.status(409).json(req.body.Username + 'Email already exists');
+                                return res.status(409).json(req.body.Email + ' already exists, please choose another email');
                                 //***If the new email the user wants to update is not found in the database, the following lines are executed.
                             } else {
                                 //***Used to hash any password entered by the user when updating before storing it in the MongoDB database. This is done to securely store the password in the database.
