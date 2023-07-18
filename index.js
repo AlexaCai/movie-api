@@ -208,12 +208,12 @@ app.post('/users',
                     return res.status(409).send(req.body.Username + ' already exists');
                 } else {
                     // Check if the new email already exists in the database. ''_id: { $ne: req.user._id }'' means that we want to find documents where the _id field is not equal to the current user's ID (req.user._id). This condition ensures that the query will return documents that do not match the current user's ID (so it will exclude the current user's document from the search results).
-                    Users.findOne({ Email: req.body.Email, _id: { $ne: req.user._id } })
+                    Users.findOne({ Email: req.body.Email })
                         //***If the query finds a matching email with the same username (existingEmailUser), the following lines are executed.
                         .then((existingEmailUser) => {
                             //***If the email already exist in the database, this line responds with a status code of 409 (conflict) and a JSON object containing an error message indicating that the email already exists.
                             if (existingEmailUser) {
-                                return res.status(409).json({ error: 'Email already exists' });
+                                return res.status(409).json(req.body.Email+ 'Email already exists');
                                 //***If the new email the user wants to update is not found in the database, the following lines are executed.
                             } else {
                                 //***Used to hash any password entered by the user when updating before storing it in the MongoDB database. This is done to securely store the password in the database.
