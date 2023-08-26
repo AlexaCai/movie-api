@@ -13,66 +13,62 @@
 
 <body>
     <div id="text">
-        <h1>Movie API</h1>
-        <h3>Description</h3>
-        <p>This API is the server-side component of a movies web application. This web
-            application provide users with access to information about different
-            movies, directors, and genres by interacting with a database that stores data
-            about different movies.
+        <h1>myFlix web app documentation (backend)</h1>
+        <h3>Projet description</h3>
+        <p>myFlix web app has been created to serve as a reference in the domain of visual entertainment. Users can
+            create an account and then log into myFlix to have access to information about different movies. They can
+            search for movies, filter results based on different criteria and create lists of favorites. myFlix has been
+            built in two parts: the backend (here) and the frontend (<a href="https://github.com/AlexaCai/myFlix-client"
+                target="_blank">see this repository for the frontend part of mtFlix</a>).
         </p>
         <p>
-            The application is hosted online. The web application itself is responsive an can therefore be
-            used anywhere and on any device, giving all users the same experience.
+            The objective of this part of the project (backend) was to build an API from scratch to power and feed the
+            movie web app and ensure easy interactions for users whenever they are accessing myFlix to read details
+            about different movies or update their information.
         </p>
         <p>
-            Whenever users of the web application are interacting with the application, the server-side of the
-            application is used, processing their requests and performing operations against the
-            data in the database. The users are able to use the the web application whenever they like
-            to read information about different movies or update their user information, for instance, their
-            list of favorite movies.
-        </p>
-        <p class="bold">
-            More specifically, the web application:
+            <strong>myFlix backend development can be breakdown in the five following points:</strong>
         </p>
         <ul>
-            <li>Returns a list of ALL movies to the user.</li>
-            <li>Returns a list of ALL movies to the user.</li>
-            <li>Returns data (description, genre, director, image URL, whether it’s featured or not) about a single
-                movie by
-                title to the user.</li>
-            <li>Returns data about a genre (description) by name/title (e.g., “Thriller”).</li>
-            <li>Returns data about a director (bio, birth year, death year) by name.</li>
-            <li>Allows new users to register.</li>
-            <li>Allows users to update their user info (username, password, email, date of birth).</li>
-            <li>Allows users to add a movie to their list of favorites.</li>
-            <li>Allows users to remove a movie from their list of favorites.</li>
-            <li>Allows existing users to deregister.</li>
+            <li><strong>Who</strong>— For frontend developers who’ll work on the client-side of myFlix, based on what’s
+                been done and documented on the server-side here. For future myFlix users who'll want to read and search
+                information about different movies as well.</li>
+            <li><strong>What</strong>— The complete server-side of myFlix web app, including the server, business logic,
+                and business layers of the application.</li>
+            <li> <strong>When</strong>— Whenever users of myFlix are interacting with the application, the server-side
+                of the application will be in use, processing their requests and performing operations against the data
+                in the database. Users will be able to use myFlix whenever they want to read information about different
+                movies or update their user information.</li>
+            <li><strong>Where</strong>-myFlix backend logic is hosted online (Heroku).</li>
+            <li><strong>Why</strong>-Movie enthusiasts want to be able to access information about different movies,
+                directors, and genres. The server-side of myFlix ensure they have access to this information, that their
+                requests can be processed and that all necessary data can be stored.</li>
         </ul>
         <h3>Technical aspects</h3>
-        <p>The complete tech stack used for this movie web application is the MERN
-            (MongoDB, Express, React, and Node.js) stack.
+        <p>The server-side of myFlix consists of a well-designed REST API and architected database built using the MERN
+            tech stack (MongoDB, Express, React and Node.js). The REST API is accessed via commonly used HTTP methods
+            (GET, PUT, POST and DELETE). Similar methods (CRUD) are used to perform operations on data stored in a
+            non-relational database.
         </p>
-        <p class="bold">
-            More specifically:
+        <p>
+            More precisely, the API:
         </p>
         <ul>
-            <li>The API is a Node.js and Express application.</li>
-            <li>The API uses REST architecture, with URL endpoints corresponding to the data
-                operations listed above</li>
-            <li>The API uses at three middleware modules, such as the body-parser package for
-                reading data from requests and morgan for logging.</li>
-            <li>The API uses a “package.json” file.</li>
-            <li>The database is built using MongoDB.</li>
-            <li>The business logic is modeled with Mongoose.</li>
-            <li>The API provides movie information in JSON format.</li>
-            <li>The API includes user authentication and authorization code.</li>
-            <li>The API includes data validation logic.</li>
-            <li>The API meets data security regulations.</li>
-            <li>The API source code is deployed to a publicly accessible on GitHub.</li>
-            <li>The API is deployed to Heroku.</li>
+            <li>Uses Node.js and Express framework;</li>
+            <li>Uses REST architecture, with URL endpoints corresponding to the operations listed in the table below;
+            </li>
+            <li>Uses middleware modules such as the Body-parser package for reading data from requests and Morgan for
+                logging;</li>
+            <li>Uses a package.json file;</li>
+            <li>Uses a MongoDB database;</li>
+            <li>Has a business logic modeled with Mongoose;</li>
+            <li>Provides movie information in JSON format;</li>
+            <li>Includes user authentication and authorization logic;</li>
+            <li>Includes data validation logic;</li>
+            <li>Meets data security standards;</li>
+            <li>Is deployed on Heroku.</li>
         </ul>
-        <h3>List of URL endpoints and request methods</h3>
-    </div>
+        <h3>List of endpoints and related information</h3>
     <table>
         <thead>
             <tr>
@@ -222,9 +218,9 @@
                 <td>JSON object holding data about the user's new account just created</td>
                 <td class="wide-column">
                     { <br>
-                    "Username": "Jake Ty", <br>
-                    "Password": "SuperSmash", <br>
-                    "Email": "j-t@hotmail.com", <br>
+                    "Username": "Usertest", <br>
+                    "Password": "Usertest", <br>
+                    "Email": "Usertest@gmail.com", <br>
                     "Birthday": "1995-09-08T00:00:00.000Z", <br>
                     "FavoriteMovies": [], <br>
                     "_id": "648e8630e9d9abf...", <br>
@@ -239,12 +235,10 @@
                 <td>PUT</td>
                 <td>JSON object holding data the user wants to update</td>
                 <td>
-                    (Update on original Jake Ty account) <br> 
-                    <br>
                     { <br>
-                    "Username": "Jake TyUP", <br>
-                    "Password": "superUP.", <br>
-                    "Email": "UP@hotmail.com", <br>
+                    "Username": "UsertestUPDATED", <br>
+                    "Password": "UsertestUPDATED", <br>
+                    "Email": "UsertestUPDATED@gmail.com", <br>
                     "Birthday": "1995-09-08T00:00:00.000Z" <br>
                     }
                 </td>
@@ -252,9 +246,9 @@
                 <td class="wide-column">
                     { <br>
                     "_id": "648e8630e9d9abf7...", <br>
-                    "Username": "Jake TyUP", <br>
-                    "Password": "superUP.", <br>
-                    "Email": "UP@hotmail.com", <br>
+                    "Username": "UsertestUPDATED", <br>
+                    "Password": "UsertestUPDATED", <br>
+                    "Email": "UsertestUPDATED@gmail.com", <br>
                     "Birthday": "1995-09-08T00:00:00.000Z", <br>
                     "__v": 0 <br>
                     }
@@ -270,14 +264,14 @@
                 <td>JSON object holding data about the user and the new movie added</td>
                 <td class="wide-column">
                     { <br>
-                        "_id": "648e8630e9d9abf7...", <br>
-                        "Username": "Jake TyUP", <br>
-                        "Password": "superUP.", <br>
-                        "Email": "UP@hotmail.com", <br>
-                        "Birthday": "1995-09-08T00:00:00.000Z", <br>
-                        "FavoriteMovies": ["648cc4289e8b6d..."], <br>
-                        "__v": 0 <br>
-                        }
+                    "_id": "648e8630e9d9abf7...", <br>
+                    "Username": "UsertestUPDATED", <br>
+                    "Password": "UsertestUPDATED", <br>
+                    "Email": "UsertestUPDATED@gmail.com", <br>
+                    "Birthday": "1995-09-08T00:00:00.000Z", <br>
+                    "FavoriteMovies": ["648cc4289e8b6d..."], <br>
+                    "__v": 0 <br>
+                    }
                 </td>
             </tr>
             <tr>
@@ -290,14 +284,14 @@
                 <td>JSON object holding data about the user (the movie removed not appaering anymore)</td>
                 <td class="wide-column">
                     { <br>
-                        "_id": "648e8630e9d9abf7...", <br>
-                        "Username": "Jake TyUP", <br>
-                        "Password": "superUP.", <br>
-                        "Email": "UP@hotmail.com", <br>
-                        "Birthday": "1995-09-08T00:00:00.000Z", <br>
-                        "FavoriteMovies": [ ] <br>
-                        "__v": 0 <br>
-                        }
+                    "_id": "648e8630e9d9abf7...", <br>
+                    "Username": "UsertestUPDATED", <br>
+                    "Password": "UsertestUPDATED", <br>
+                    "Email": "UsertestUPDATED@gmail.com", <br>
+                    "Birthday": "1995-09-08T00:00:00.000Z", <br>
+                    "FavoriteMovies": [ ] <br>
+                    "__v": 0 <br>
+                    }
                 </td>
             </tr>
             <tr>
@@ -309,11 +303,27 @@
                 <td>Not applicable</td>
                 <td>Confirmation message that account has been deleted</td>
                 <td class="wide-column">
-                    "Jake TyUP has been deleted."
+                    "UsertestUPDATED has been deleted."
                 </td>
             </tr>
         </tbody>
     </table>
+    <h3 style="margin-left: 40px;">App dependencies</h3>
+    <ul>
+        <li>bcrypt: ^5.1.0 </li>
+        <li>body-parser: ^1.20.2 </li>
+        <li>cors: ^2.8.5 </li>
+        <li>express: ^4.18.2 </li>
+        <li>express-validator: ^7.0.1 </li>
+        <li>jsonwebtoken: ^9.0.0 </li>
+        <li>mongoose: ^7.3.0 </li>
+        <li>morgan: ^1.10.0 </li>
+        <li>passport: ^0.6.0 </li>
+        <li>passport-jwt: ^4.0.1 </li>
+        <li>passport-local: ^1.0.0 </li>
+        <li>uuid: ^9.0.0</li>
+    </ul>
+</div>
 </body>
 
 </html>
