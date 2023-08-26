@@ -1,4 +1,4 @@
-# myFlix web app documentation (backend)
+# *myFlix* web app documentation (backend)
 
 **Content**
 
@@ -9,23 +9,23 @@
  
 ## Projet description
 
-myFlix web app has been created to serve as a reference in the domain of visual entertainment. Users can create an account and then log into myFlix to have access to information about different movies. They can search for movies, filter results based on different criteria and create lists of favorites. myFlix has been built in two parts: the backend (here) and the frontend ([see this repository for the frontend part of mtFlix](https://github.com/AlexaCai/myFlix-client)).
+*myFlix* web app has been created to serve as a reference in the domain of visual entertainment. Users can create an account and then log into *myFlix* to have access to information about different movies. They can search for movies, filter results based on different criteria and create lists of favorites. *myFlix* has been built in two parts: the backend (here) and the frontend ([see this repository for the frontend part of *myFlix*](https://github.com/AlexaCai/myFlix-client)).
 
-The objective of this part of the project (backend) was to build an API from scratch to power and feed the movie web app and ensure easy interactions for users whenever they are accessing myFlix to read details about different movies or update their information.
+The objective of this part of the project (backend) was to build an API from scratch to power and feed the movie web app and ensure easy interactions for users whenever they are accessing *myFlix* to read details about different movies or update their information.
 
 *myFlix* backend development can be breakdown in the five following points:
 
- - **Who** — For frontend developers who’ll work on the client-side of myFlix, based on what’s been done and documented on the server-side here. For future myFlix users who'll want to read and search information about different movies as well.
- - **What** — The complete server-side of myFlix web app, including the server, business logic, and business layers of the application.
- - **When** — Whenever users of myFlix are interacting with the application, the server-side of the application will be in use, processing their requests and performing operations against the data in the database. Users will be able to use myFlix whenever they want to read information about different movies or update their user information.
- - **Where** — myFlix backend logic is hosted online (Heroku).
- - **Why** — Movie enthusiasts want to be able to access information about different movies, directors, and genres. The server-side of myFlix ensure they have access to this information, that their requests can be processed and that all necessary data can be stored.
+ - **Who** — For frontend developers who’ll work on the client-side of *myFlix*, based on what’s been done and documented on the server-side here. For future *myFlix* users who'll want to read and search information about different movies as well.
+ - **What** — The complete server-side of *myFlix* web app, including the server, business logic, and business layers of the application.
+ - **When** — Whenever users of *myFlix* are interacting with the application, the server-side of the application will be in use, processing their requests and performing operations against the data in the database. Users will be able to use *myFlix* whenever they want to read information about different movies or update their user information.
+ - **Where** — *myFlix* backend logic is hosted online (Heroku).
+ - **Why** — Movie enthusiasts want to be able to access information about different movies, directors, and genres. The server-side of *myFlix* ensure they have access to this information, that their requests can be processed and that all necessary data can be stored.
 
 
 ## Technical aspects
 
 
-The server-side of myFlix consists of a well-designed REST API and architected database built using the MERN tech stack (MongoDB, Express, React and Node.js). The REST API is accessed via commonly used HTTP methods (GET, PUT, POST and DELETE). Similar methods (CRUD) are used to perform operations on data stored in a non-relational database.
+The server-side of *myFlix* consists of a well-designed REST API and architected database built using the MERN tech stack (MongoDB, Express, React and Node.js). The REST API is accessed via commonly used HTTP methods (GET, PUT, POST and DELETE). Similar methods (CRUD) are used to perform operations on data stored in a non-relational database.
 
 More precisely, the API:
 
@@ -65,7 +65,7 @@ More precisely, the API:
 
 ## App dependencies
 
-The following dependencies are required for the myFlix backend logic to work:
+The following dependencies are required for the *myFlix* backend logic to work:
 
 - bcrypt: ^5.1.0
 - body-parser: ^1.20.2
