@@ -252,6 +252,24 @@ app.put('/users/:Username', passport.authenticate('jwt', { session: false }),
             });
     });
 
+//***REQUEST: Allow to get information on the user logged-in - GET (with MONGOOSE).
+app.get('/users/:Username', (req, res) => {
+    const username = req.params.Username;
+      Users.findOne({ Username: username })
+      .lean()
+      .then((user) => {
+        if (!user) {
+          return res.status(404).json({ error: 'User not found' });
+        }
+          res.json(user);
+      })
+      .catch((err) => {
+        console.error(err);
+        res.status(500).send('Error: ' + err);
+      });
+  });
+  
+
 
 //***REQUEST: Allow users to add a movie to their list of favorites - POST (with MONGOOSE).
 app.post('/users/:Username/movies/:MovieID', passport.authenticate('jwt', { session: false }), (req, res) => {
