@@ -268,7 +268,6 @@ app.get('/users/:Username', passport.authenticate("jwt", { session: false }), (r
         res.status(500).send('Error: ' + err);
       });
   });
-  
 
 
 //***REQUEST: Allow users to add a movie to their list of favorites - POST (with MONGOOSE).
