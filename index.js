@@ -253,7 +253,7 @@ app.put('/users/:Username', passport.authenticate('jwt', { session: false }),
     });
 
 //***REQUEST: Allow to get information on the user logged-in - GET (with MONGOOSE).
-app.get('/users/:Username', (req, res) => {
+app.get('/users/:Username', passport.authenticate("jwt", { session: false }), (req, res) => {
     const username = req.params.Username;
       Users.findOne({ Username: username })
       .lean()
