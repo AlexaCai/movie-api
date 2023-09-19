@@ -254,15 +254,9 @@ app.put('/users/:Username', passport.authenticate('jwt', { session: false }),
 
 //***REQUEST: Allow to get information on the user logged-in - GET (with MONGOOSE).
 app.get('/users/:Username', passport.authenticate('jwt', { session: false }), (req, res) => {
-    const requestedUsername = req.params.Username;
-    console.log('Requested username:', requestedUsername); // Log the requested username
-    Users.findOne({ Username: requestedUsername })
+    Users.findOne({ Username: req.params.Username })
         .lean()
         .then((user) => {
-            if (!user) {
-                console.log('User not found'); // Log if the user is not found
-                return res.status(404).send('User not found');
-            }
             res.json(user);
         })
         .catch((err) => {
@@ -270,7 +264,6 @@ app.get('/users/:Username', passport.authenticate('jwt', { session: false }), (r
             res.status(500).send('Error: ' + err);
         });
 });
-
 
 
 //***REQUEST: Allow users to add a movie to their list of favorites - POST (with MONGOOSE).
