@@ -3,7 +3,7 @@ const app = express();
 
 
 const cors = require('cors');
-let allowedOrigins = ['http://localhost:8080', 'http://testsite.com', 'http://localhost:1234', 'https://myflix-movies-advisor.netlify.app'];
+let allowedOrigins = ['http://localhost:8080', 'http://testsite.com', 'http://localhost:1234', 'http://localhost:4200', 'https://myflix-movies-advisor.netlify.app'];
 app.use(cors({
     origin: (origin, callback) => {
         if (!origin) return callback(null, true);
