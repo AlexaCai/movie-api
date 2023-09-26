@@ -1,6 +1,18 @@
+/**
+ * @fileoverview index.js
+ * @description This file constitutes the main API element. All endpoints are defined there, as well as their specific parameters, what they require and what information they return. Endpoints summary (12 in total) :
+*<pre>
+*-6 GET
+*-1 PUT
+*-3 POST
+*-2 DELETE
+*<pre>
+*This file also contains the codes to import other project files (eg: auth.js which contains the logic for log in or passport.js which contains the logic related to JWT)
+*as well as codes that configure certain additional elements, such as cross-origin resource sharing (CORS).
+*/
+
 const express = require('express');
 const app = express();
-
 
 const cors = require('cors');
 let allowedOrigins = ['http://localhost:8080', 'http://testsite.com', 'http://localhost:1234', 'http://localhost:4200', 'https://myflix-movies-advisor.netlify.app', 'https://alexacai.github.io/'];
@@ -45,7 +57,42 @@ const Users = Models.User;
 mongoose.connect(process.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 
 
-//***REQUEST: Return a list of all movies - READ (with MONGOOSE).
+/**
+ * @function
+ * @name getMovies
+ *
+ * @Summary 
+ * Get a list of all movies. This endpoint allows to retrieve a list of all movies from the MongoDB database and returns them as a JSON response.
+ * Authentication using JWT (received by users upon successful login) is required to use this route and access the movies.<br><br>
+ * 
+ * GET movies endpoint characteristics: <br><br>
+ * 
+ *-Endpoint URL: /movies <br>
+ *-Query parameter(s) (parameter(s) in the URL): none <br>
+ *-HTTP method: GET <br>
+ *-Request body data format: N.A. <br>
+ *-Request body data example: N.A. <br>
+ * @return JSON object holding data about the movies from the database.
+ * @example RESPONSE/RETURNED JSON object.
+ * [
+ *   {
+ *     "Title": "",
+ *     "Description": "",
+ *     "Genre": {
+ *       "Name": "",
+ *       "Description": "",
+ *     },
+ *     "Director": {
+ *       "Name": "",
+ *       "Bio": "",
+ *       "Birth": "",
+ *       "Death": "",
+ *     },
+ *     "ImagePath": "",
+ *     "Featured": Boolean,
+ *   }
+ * ]
+ */
 app.get('/movies', passport.authenticate('jwt', { session: false }), (req, res) => {
     Movies.find()
         .lean()
@@ -70,7 +117,40 @@ app.get('/movies', passport.authenticate('jwt', { session: false }), (req, res) 
 });
 
 
-//***REQUEST: Return data about a single movie by title - READ (WITH MONGOOSE).
+/**
+ * @function
+ * @name getOneMovie
+ *
+ * @Summary 
+ * Get one specific movie. This endpoint allows to retrieve a specific movie from the MongoDB database based on title, and returns it as a JSON response.
+ * Authentication using JWT (received by users upon successful login) is required to use this route and access the movie.<br><br>
+ * 
+ * GET one movie endpoint characteristics: <br><br>
+ * 
+ *-Endpoint URL: /movies/:Title <br>
+ *-Query parameter(s) (parameter(s) in the URL): :Title <br>
+ *-HTTP method: GET <br>
+ *-Request body data format: N.A. <br>
+ *-Request body data example: N.A. <br>
+ * @return JSON object holding data about the movie requested from the database.
+ * @example RESPONSE/RETURNED JSON object.
+ *   {
+ *     "Title": "(REQUESTED MOVIE)",
+ *     "Description": "",
+ *     "Genre": {
+ *       "Name": "",
+ *       "Description": "",
+ *     },
+ *     "Director": {
+ *       "Name": "",
+ *       "Bio": "",
+ *       "Birth": "",
+ *       "Death": "",
+ *     },
+ *     "ImagePath": "",
+ *     "Featured": Boolean,
+ *   }
+ */
 app.get('/movies/:Title', passport.authenticate('jwt', { session: false }), (req, res) => {
     Movies.findOne({ Title: req.params.Title })
         .lean()
@@ -93,7 +173,40 @@ app.get('/movies/:Title', passport.authenticate('jwt', { session: false }), (req
 });
 
 
-//***REQUEST: Return data about a genre by name - READ (with MONGOOSE).
+/**
+ * @function
+ * @name getGenre
+ *
+ * @Summary 
+ * Get one specific movie genre. This endpoint allows to retrieve a specific movie genre from the MongoDB database based on genre name, and returns it as a JSON response.
+ * Authentication using JWT (received by users upon successful login) is required to use this route and access a genre information.<br><br>
+ * 
+ * GET a genre endpoint characteristics: <br><br>
+ * 
+ *-Endpoint URL: /movies/genre/:genreName <br>
+ *-Query parameter(s) (parameter(s) in the URL): :genreName <br>
+ *-HTTP method: GET <br>
+ *-Request body data format: N.A. <br>
+ *-Request body data example: N.A. <br>
+ * @return JSON object holding data about the genre requested from the database.
+ * @example RESPONSE/RETURNED JSON object.
+ *   {
+ *     "Title": "",
+ *     "Description": "",
+ *     "Genre": {
+ *       "Name": "REQUESTED GENRE",
+ *       "Description": "",
+ *     },
+ *     "Director": {
+ *       "Name": "",
+ *       "Bio": "",
+ *       "Birth": "",
+ *       "Death": "",
+ *     },
+ *     "ImagePath": "",
+ *     "Featured": Boolean,
+ *   }
+ */
 app.get('/movies/genre/:genreName', passport.authenticate('jwt', { session: false }), (req, res) => {
     Movies.find({ 'Genre.Name': req.params.genreName })
         .lean()
@@ -118,7 +231,40 @@ app.get('/movies/genre/:genreName', passport.authenticate('jwt', { session: fals
 });
 
 
-//***REQUEST: Return data about a director by name - READ (with MONGOOSE).
+/**
+ * @function
+ * @name getDirector
+ *
+ * @Summary 
+ * Get one specific movie director. This endpoint allows to retrieve a specific movie director from the MongoDB database based on the director name, and returns it as a JSON response.
+ * Authentication using JWT (received by users upon successful login) is required to use this route and access a director information.<br><br>
+ * 
+ * GET a director endpoint characteristics: <br><br>
+ * 
+ *-Endpoint URL: /movies/directors/:directorName <br>
+ *-Query parameter(s) (parameter(s) in the URL): :directorName <br>
+ *-HTTP method: GET <br>
+ *-Request body data format: N.A. <br>
+ *-Request body data example: N.A. <br>
+ * @return JSON object holding data about the director requested from the database.
+ * @example RESPONSE/RETURNED JSON object.
+ *   {
+ *     "Title": "",
+ *     "Description": "",
+ *     "Genre": {
+ *       "Name": "",
+ *       "Description": "",
+ *     },
+ *     "Director": {
+ *       "Name": "REQUESTED DIRECTOR ",
+ *       "Bio": "",
+ *       "Birth": "",
+ *       "Death": "",
+ *     },
+ *     "ImagePath": "",
+ *     "Featured": Boolean,
+ *   }
+ */
 app.get('/movies/directors/:directorName', passport.authenticate('jwt', { session: false }), (req, res) => {
     Movies.find({ 'Director.Name': req.params.directorName })
         .lean()
@@ -143,7 +289,41 @@ app.get('/movies/directors/:directorName', passport.authenticate('jwt', { sessio
 });
 
 
-//***REQUEST: Allow new users to register - POST (WITH MONGOOSE).
+/**
+ * @function
+ * @name createUser
+ *
+ * @Summary 
+ * Allow new users to register/create an account. This endpoint sends the new users' information to the MongoDB database, and returns it as a JSON response. <br><br>
+ * 
+ * POST new users information endpoint characteristics: <br><br>
+ * 
+ *-Endpoint URL: /users <br>
+ *-Query parameter(s) (parameter(s) in the URL): none <br>
+ *-HTTP method: POST <br>
+ *-Request body data format: JSON object holding data about the user who wants to create an account. <br>
+ * @example SENT JSON object.
+ *   {
+ *     "Username": "", 
+ *     "Password": "", 
+ *     "Email": "", 
+ *     "Birthday": "", 
+ *     "FavoriteMovies": [], 
+ *     "_id": "", 
+ *     "__v": 0
+ *   }
+ * @return JSON object holding data about the user's new account just created.
+ * @example RESPONSE/RETURNED JSON object.
+ *   {
+ *     "Username": "", 
+ *     "Password": "", 
+ *     "Email": "", 
+ *     "Birthday": "", 
+ *     "FavoriteMovies": [], 
+ *     "_id": "", 
+ *     "__v": 0
+ *   }
+ */
 app.post('/users',
     [
         check('Username', 'Username with min. 5 characters is required').isLength({ min: 5 }),
@@ -195,7 +375,39 @@ app.post('/users',
     });
 
 
-//***REQUEST: Allow users to update their user info - PUT (with MONGOOSE).
+/**
+ * @function
+ * @name updateUser
+ *
+ * @Summary 
+ * Allow users to update their information/account. This endpoint sends users updated information to the MongoDB database, and returns it as a JSON response.
+ * Authentication using JWT (received by users upon successful login) is required to use this route and update information.<br><br>
+ * 
+ * PUT users update information endpoint characteristics: <br><br>
+ * 
+ *-Endpoint URL: /users/:Username <br>
+ *-Query parameter(s) (parameter(s) in the URL): :Username <br>
+ *-HTTP method: PUT <br>
+ *-Request body data format: JSON object holding data the user wants to update. <br>
+ * @example SENT JSON object.
+ *   {
+ *     "Username": "", 
+ *     "Password": "", 
+ *     "Email": "", 
+ *     "Birthday": ""
+ *   }
+ * @return JSON object holding data about the user's updated account.
+ * @example RESPONSE/RETURNED JSON object.
+ *   {
+ *     "Username": "", 
+ *     "Password": "", 
+ *     "Email": "", 
+ *     "Birthday": "", 
+ *     "FavoriteMovies": [], 
+ *     "_id": "", 
+ *     "__v": 0
+ *   }
+ */
 app.put('/users/:Username', passport.authenticate('jwt', { session: false }),
     [
         check('Username', 'Username with min. 5 characters is required').isLength({ min: 5 }),
@@ -252,7 +464,34 @@ app.put('/users/:Username', passport.authenticate('jwt', { session: false }),
             });
     });
 
-//***REQUEST: Allow to get information on the user logged-in - GET (with MONGOOSE).
+
+/**
+ * @function
+ * @name getUserInfo
+ *
+ * @Summary 
+ * Allow to GET information about a current logged in user. This endpoint allows to retrieve a specific user information from the MongoDB database based on the user's username, and returns it as a JSON response.
+ * Authentication using JWT (received by users upon successful login) is required to use this route and get the user's information.<br><br>
+ * 
+ * GET user information endpoint characteristics: <br><br>
+ * 
+ *-Endpoint URL: /users/:Username <br>
+ *-Query parameter(s) (parameter(s) in the URL): :Username <br>
+ *-HTTP method: GET <br>
+ *-Request body data format: N.A. <br>
+ *-Request body data example: N.A. <br>
+ * @return JSON object holding data about the user.
+ * @example RESPONSE/RETURNED JSON object.
+ *   {
+ *     "Username": "", 
+ *     "Password": "", 
+ *     "Email": "", 
+ *     "Birthday": "", 
+ *     "FavoriteMovies": [], 
+ *     "_id": "", 
+ *     "__v": 0
+ *   }
+ */
 app.get('/users/:Username', passport.authenticate("jwt", { session: false }), (req, res) => {
     const username = req.params.Username;
       Users.findOne({ Username: username })
@@ -270,7 +509,33 @@ app.get('/users/:Username', passport.authenticate("jwt", { session: false }), (r
   });
 
 
-//***REQUEST: Allow users to add a movie to their list of favorites - POST (with MONGOOSE).
+/**
+ * @function
+ * @name addFavoriteMovies
+ *
+ * @Summary 
+ * Allow to POST favorite movies into user account. This endpoint allows to add favorite movies to a user list of favorite in the MongoDB database based on the user's username and movie ID, and returns it as a JSON response.
+ * Authentication using JWT (received by users upon successful login) is required to use this route and add a favorite movie to a user list of favorite.<br><br>
+ * 
+ * POST new favorite movies endpoint characteristics: <br><br>
+ * 
+ *-Endpoint URL: /users/:Username/ movies/:movieID <br>
+ *-Query parameter(s) (parameter(s) in the URL): :Username & :movieID <br>
+ *-HTTP method: POST <br>
+ *-Request body data format: N.A. <br>
+ *-Request body data example: N.A. <br>
+ * @return JSON object holding data about the user and the new movie added.
+ * @example RESPONSE/RETURNED JSON object.
+ *   {
+ *     "Username": "", 
+ *     "Password": "", 
+ *     "Email": "", 
+ *     "Birthday": "", 
+ *     "FavoriteMovies": [], 
+ *     "_id": "", 
+ *     "__v": 0
+ *   }
+ */
 app.post('/users/:Username/movies/:MovieID', passport.authenticate('jwt', { session: false }), (req, res) => {
     Users.findOneAndUpdate({ Username: req.params.Username }, {
         $push: { FavoriteMovies: req.params.MovieID }
@@ -287,7 +552,33 @@ app.post('/users/:Username/movies/:MovieID', passport.authenticate('jwt', { sess
 });
 
 
-//***REQUEST: Allow users to remove a movie from their list of favorites - DELETE (with MONGOOSE).
+/**
+ * @function
+ * @name deleteFavoriteMovies
+ *
+ * @Summary 
+ * Allow to DELETE favorite movies from user's account. This endpoint allows to remove favorite movies from a user list of favorite in the MongoDB database based on the user's username and movie ID, and returns it as a JSON response.
+ * Authentication using JWT (received by users upon successful login) is required to use this route and remove a favorite movie from a user list of favorite.<br><br>
+ * 
+ * DELETE favorite movies endpoint characteristics: <br><br>
+ * 
+ *-Endpoint URL: /users/:Username/ movies/:movieID <br>
+ *-Query parameter(s) (parameter(s) in the URL): :Username & :movieID <br>
+ *-HTTP method: DELETE <br>
+ *-Request body data format: N.A. <br>
+ *-Request body data example: N.A. <br>
+ * @return JSON object holding data about the user (the movie removed not appearing anymore).
+ * @example RESPONSE/RETURNED JSON object.
+ *   {
+ *     "Username": "", 
+ *     "Password": "", 
+ *     "Email": "", 
+ *     "Birthday": "", 
+ *     "FavoriteMovies": [], 
+ *     "_id": "", 
+ *     "__v": 0
+ *   }
+ */
 app.delete('/users/:Username/movies/:MovieID', passport.authenticate('jwt', { session: false }), (req, res) => {
     Users.findOneAndUpdate({ Username: req.params.Username }, {
         $pull: { FavoriteMovies: req.params.MovieID }
@@ -304,7 +595,25 @@ app.delete('/users/:Username/movies/:MovieID', passport.authenticate('jwt', { se
 });
 
 
-//***REQUEST: Allow existing users to deregister - DELETE (with MONGOOSE).
+
+/**
+ * @function
+ * @name deleteUser
+ *
+ * @Summary 
+ * Allow to DELETE a user account. This endpoint allows to delete a specific user account from the MongoDB database based on the user's username, and returns it as a message response.
+ * Authentication using JWT (received by users upon successful login) is required to use this route and delete user's account. <br><br>
+ * 
+ * DELETE user account endpoint characteristics: <br><br>
+ * 
+ *-Endpoint URL: /users/:Username <br>
+ *-Query parameter(s) (parameter(s) in the URL): :Username <br>
+ *-HTTP method: DELETE <br>
+ *-Request body data format: N.A. <br>
+ *-Request body data example: N.A. <br>
+ * @return Confirmation message that the account has been deleted.
+ * @example RESPONSE/RETURNED message: '(userame) has been deleted.'
+ */
 app.delete('/users/:Username', passport.authenticate('jwt', { session: false }), (req, res) => {
     Users.findOneAndRemove({ Username: req.params.Username })
         .then((user) => {
@@ -321,7 +630,23 @@ app.delete('/users/:Username', passport.authenticate('jwt', { session: false }),
 });
 
 
-//***Express GET route located at the endpoint '/' returns a string default message. It's the root directory.
+/**
+ * @function
+ * @name rootDirectory
+ *
+ * @Summary 
+ * This endpoint is the root directory. <br><br>
+ * 
+ * GET root endpoint characteristics: <br><br>
+ * 
+ *-Endpoint URL: / <br>
+ *-Query parameter(s) (parameter(s) in the URL): none <br>
+ *-HTTP method: GET <br>
+ *-Request body data format: N.A. <br>
+ *-Request body data example: N.A. <br>
+ * @return Message.
+ * @example RESPONSE/RETURNED message: 'Welcome to your new movie e-friend advisor!'
+ */
 app.get('/', (req, res) => {
     res.send('Welcome to your new movie e-friend advisor!');
 });

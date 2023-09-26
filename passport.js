@@ -1,3 +1,8 @@
+/**
+ * @fileoverview passport.js
+ * @description This file contains the logic that handles two authentication strategies: local (username and password) and JWT. These strategies are then used by different API endpoints in index.js to allow or restrict certain data resources.
+*/
+
 const passport = require('passport'),
     LocalStrategy = require('passport-local').Strategy,
     Models = require('./models.js'),
