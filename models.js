@@ -1,3 +1,8 @@
+/**
+ * @fileoverview models.js
+ * @description This file contains the logic that defines the schemas and models for the MongoDB collections (movies and users), ensuring the documents follow a consistent format.
+*/
+
 //***''bycrypt'' is a module that hashes users’ passwords and compare hashed passwords every time users log in order to ensure a more secure login authentication process.
 const bcrypt = require('bcrypt');
 
